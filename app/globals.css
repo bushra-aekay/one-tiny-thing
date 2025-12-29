@@ -123,3 +123,13 @@
     @apply bg-[#ECE1E9]/40 text-[#2E6467];
   }
 }
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}

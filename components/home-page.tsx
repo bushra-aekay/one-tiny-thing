@@ -155,19 +155,20 @@ export default function HomePage() {
           <p className="text-sm text-[#2E6467]">{taskData.task}</p>
         </div>
 
-        <button
-          onClick={handleShipped}
-          className="w-full px-4 py-2.5 text-sm font-medium text-white bg-[#C29762] rounded-xl hover:bg-[#C29762]/90 active:scale-[0.98] transition-all"
-        >
-          yep, shipped it :)
-        </button>
-
-        <button
-          onClick={handleNotYet}
-          className="w-full px-4 py-2 text-xs font-medium text-[#5B7785] bg-transparent border border-[#5B7785]/20 rounded-xl hover:bg-[#ECE1E9]/30 transition-all"
-        >
-          not yet, still working on it
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={handleShipped}
+            className="flex-1 px-4 py-2.5 text-sm font-medium text-white bg-[#C29762] rounded-xl hover:bg-[#C29762]/90 active:scale-[0.98] transition-all"
+          >
+            shipped :)
+          </button>
+          <button
+            onClick={handleNotYet}
+            className="px-4 py-2.5 text-xs font-medium text-[#5B7785] bg-[#ECE1E9]/30 rounded-xl hover:bg-[#ECE1E9]/50 transition-all"
+          >
+            not yet
+          </button>
+        </div>
       </div>
     )
   }
@@ -210,19 +211,20 @@ export default function HomePage() {
           <p className="text-sm text-[#2E6467]">{taskData.task}</p>
         </div>
 
-        <button
-          onClick={handleChangeTask}
-          className="w-full px-4 py-2.5 text-sm font-medium text-white bg-[#5B7785] rounded-xl hover:bg-[#2E6467] active:scale-[0.98] transition-all"
-        >
-          yeah, change it
-        </button>
-
-        <button
-          onClick={() => setShowCheckIn(true)}
-          className="w-full px-4 py-2 text-xs font-medium text-[#5B7785] bg-transparent border border-[#5B7785]/20 rounded-xl hover:bg-[#ECE1E9]/30 transition-all"
-        >
-          nah, keep it
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={handleChangeTask}
+            className="flex-1 px-4 py-2.5 text-sm font-medium text-white bg-[#5B7785] rounded-xl hover:bg-[#2E6467] active:scale-[0.98] transition-all"
+          >
+            change it
+          </button>
+          <button
+            onClick={() => setShowCheckIn(true)}
+            className="px-4 py-2.5 text-xs font-medium text-[#5B7785] bg-[#ECE1E9]/30 rounded-xl hover:bg-[#ECE1E9]/50 transition-all"
+          >
+            keep it
+          </button>
+        </div>
       </div>
     )
   }

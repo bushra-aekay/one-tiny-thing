@@ -6,14 +6,18 @@ let mainWindow
 
 const createWindow = () => {
   mainWindow = new BrowserWindow({
-    width: 500,
-    height: 650,
+    width: 420,
+    height: 720,
+    frame: false,
+    transparent: true,
+    resizable: false,
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
       enableRemoteModule: false,
     },
     icon: path.join(__dirname, "../public/icon.png"),
+    backgroundColor: '#00000000',
   })
 
   const startUrl = isDev ? "http://localhost:3000" : `file://${path.join(__dirname, "../out/index.html")}`
@@ -29,7 +33,10 @@ const createWindow = () => {
   })
 }
 
-app.on("ready", createWindow)
+app.on("ready", () => {
+  Menu.setApplicationMenu(null)
+  createWindow()
+})
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
@@ -42,8 +49,3 @@ app.on("activate", () => {
     createWindow()
   }
 })
-
-// Remove menu in production
-if (!isDev) {
-  Menu.setApplicationMenu(null)
-}
