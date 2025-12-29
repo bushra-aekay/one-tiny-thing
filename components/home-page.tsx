@@ -88,9 +88,9 @@ export default function HomePage() {
   // Step 1: Ask for username if not set
   if (!userName) {
     return (
-      <div className="flex flex-col gap-8 items-center">
-        <div className="text-center space-y-3">
-          <div className="text-5xl mb-2">✨</div>
+      <div className="flex flex-col gap-6 items-center">
+        <div className="text-center space-y-2">
+          <div className="text-5xl mb-3">✨</div>
           <h1 className="text-2xl font-semibold text-purple-900 leading-tight">
             hey there!
           </h1>
@@ -121,9 +121,9 @@ export default function HomePage() {
   // Step 2: If already shipped today
   if (taskData?.shipped) {
     return (
-      <div className="flex flex-col gap-8 items-center text-center">
-        <div className="text-6xl mb-2">🎉</div>
-        <div className="space-y-3">
+      <div className="flex flex-col gap-6 items-center text-center">
+        <div className="text-6xl mb-3">🎉</div>
+        <div className="space-y-2">
           <h1 className="text-2xl font-semibold text-emerald-900 leading-tight">
             you already shipped today!
           </h1>
@@ -142,9 +142,9 @@ export default function HomePage() {
   // Step 3: Show check-in if task exists and user is returning
   if (showCheckIn && taskData) {
     return (
-      <div className="flex flex-col gap-8">
-        <div className="text-center space-y-3">
-          <div className="text-5xl mb-2">👀</div>
+      <div className="flex flex-col gap-6">
+        <div className="text-center space-y-2">
+          <div className="text-5xl mb-3">👀</div>
           <h1 className="text-2xl font-semibold text-purple-900 leading-tight">
             hey {userName}!
           </h1>
@@ -178,9 +178,9 @@ export default function HomePage() {
   // Step 4: Show confirmation after setting task
   if (showConfirmation && taskData) {
     return (
-      <div className="flex flex-col gap-8 items-center text-center">
-        <div className="text-6xl mb-2">🌟</div>
-        <div className="space-y-3">
+      <div className="flex flex-col gap-6 items-center text-center">
+        <div className="text-6xl mb-3">🌟</div>
+        <div className="space-y-2">
           <h1 className="text-2xl font-semibold text-purple-900 leading-tight">
             ok bet!
           </h1>
@@ -199,9 +199,9 @@ export default function HomePage() {
   // Step 5: If task already set for today, offer to change it
   if (taskData && !showConfirmation) {
     return (
-      <div className="flex flex-col gap-8 text-center">
-        <div className="text-5xl mb-2">📝</div>
-        <div className="space-y-3">
+      <div className="flex flex-col gap-6 text-center">
+        <div className="text-5xl mb-3">📝</div>
+        <div className="space-y-2">
           <h1 className="text-2xl font-semibold text-purple-900 leading-tight">
             you already have a task!
           </h1>
@@ -234,9 +234,9 @@ export default function HomePage() {
 
   // Step 6: Fresh task entry
   return (
-    <div className="flex flex-col gap-8">
-      <div className="text-center space-y-3">
-        <div className="text-5xl mb-2">✨</div>
+    <div className="flex flex-col gap-6">
+      <div className="text-center space-y-2">
+        <div className="text-5xl mb-3">✨</div>
         <h1 className="text-2xl font-semibold text-purple-900 leading-tight">
           hey {userName}!
         </h1>
