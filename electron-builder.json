@@ -1,0 +1,17 @@
+{
+  "appId": "com.example.shiptoday",
+  "productName": "ship today",
+  "files": ["electron/**", "out/**"],
+  "directories": {
+    "buildResources": "public"
+  },
+  "mac": {
+    "target": ["dmg", "zip"]
+  },
+  "win": {
+    "target": ["nsis", "portable"]
+  },
+  "linux": {
+    "target": ["AppImage"]
+  }
+}
