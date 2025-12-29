@@ -6,10 +6,14 @@ import HomePage from "@/components/home-page"
 import GraphPage from "@/components/graph-page"
 import SettingsPage from "@/components/settings-page"
 import WindowControls from "@/components/window-controls"
+import { useElectronSync } from "@/hooks/use-electron-sync"
 
 export default function Page() {
   const [currentPage, setCurrentPage] = useState<"home" | "graph" | "settings">("home")
   const [mounted, setMounted] = useState(false)
+
+  // Sync with Electron for notifications
+  useElectronSync()
 
   useEffect(() => {
     setMounted(true)
