@@ -35,12 +35,13 @@ export default function GraphPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="text-center space-y-1">
-        <h2 className="text-xl font-normal text-gray-900">your progress</h2>
-        <p className="text-sm text-gray-500">last 42 days</p>
+      <div className="text-center space-y-2">
+        <div className="text-4xl mb-2">📊</div>
+        <h2 className="text-2xl font-semibold text-purple-900">your streak</h2>
+        <p className="text-sm text-purple-600">last 42 days of tiny wins</p>
       </div>
 
-      <div className="p-5 bg-gray-50 rounded-xl border border-gray-200">
+      <div className="p-6 bg-white/70 rounded-2xl border-2 border-purple-200 shadow-lg shadow-purple-100">
         <div className="grid grid-cols-7 gap-2.5">
           {days.map((state, index) => {
             const today = new Date()
@@ -51,35 +52,35 @@ export default function GraphPage() {
 
             const classes =
               state === "shipped"
-                ? "bg-green-400 ring-2 ring-green-200"
+                ? "bg-gradient-to-br from-emerald-400 to-emerald-500 shadow-md shadow-emerald-200"
                 : state === "not-shipped"
-                ? "bg-red-300 ring-2 ring-red-100"
-                : "bg-gray-200"
+                ? "bg-purple-200"
+                : "bg-purple-50 border-2 border-purple-100"
 
-            const title = state === "shipped" ? "shipped" : state === "not-shipped" ? "skipped" : "no entry"
+            const title = state === "shipped" ? "shipped ✓" : state === "not-shipped" ? "skipped" : "no entry"
 
             return (
               <div
                 key={index}
                 title={`${dateStr} — ${title}`}
                 aria-label={`${dateStr} ${title}`}
-                className={`w-9 h-9 rounded-md flex items-center justify-center transition-all ${classes}`}
+                className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all hover:scale-110 ${classes}`}
               />
             )
           })}
         </div>
 
-        <div className="flex items-center justify-center gap-4 mt-5 text-xs text-gray-600">
-          <div className="flex items-center gap-1.5">
-            <div className="w-3 h-3 rounded-sm bg-green-400"></div>
+        <div className="flex items-center justify-center gap-5 mt-6 text-xs font-medium text-purple-700">
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 rounded-lg bg-gradient-to-br from-emerald-400 to-emerald-500"></div>
             <span>shipped</span>
           </div>
-          <div className="flex items-center gap-1.5">
-            <div className="w-3 h-3 rounded-sm bg-red-300"></div>
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 rounded-lg bg-purple-200"></div>
             <span>skipped</span>
           </div>
-          <div className="flex items-center gap-1.5">
-            <div className="w-3 h-3 rounded-sm bg-gray-200"></div>
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 rounded-lg bg-purple-50 border-2 border-purple-100"></div>
             <span>no entry</span>
           </div>
         </div>

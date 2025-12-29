@@ -34,55 +34,56 @@ export default function SettingsPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="text-center space-y-1">
-        <h2 className="text-xl font-normal text-gray-900">settings</h2>
-        <p className="text-sm text-gray-500">customize your experience</p>
+      <div className="text-center space-y-2">
+        <div className="text-4xl mb-2">⚙️</div>
+        <h2 className="text-2xl font-semibold text-purple-900">settings</h2>
+        <p className="text-sm text-purple-600">make it yours~</p>
       </div>
 
       <div className="space-y-5">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">name</label>
+          <label className="block text-sm font-semibold text-purple-700 mb-2">your name</label>
           <input
             type="text"
             value={user.name}
             onChange={(e) => handleChange("name", e.target.value)}
             placeholder="your name"
-            className="w-full px-4 py-2.5 text-base bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all"
+            className="w-full px-5 py-3 text-base bg-white/70 border-2 border-purple-200 rounded-2xl text-purple-900 placeholder-purple-300 focus:outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-100 transition-all"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-semibold text-purple-700 mb-2">
             day start time
           </label>
           <input
             type="time"
             value={user.dayStart}
             onChange={(e) => handleChange("dayStart", e.target.value)}
-            className="w-full px-4 py-2.5 text-base bg-gray-50 border border-gray-200 rounded-lg text-gray-900 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all"
+            className="w-full px-5 py-3 text-base bg-white/70 border-2 border-purple-200 rounded-2xl text-purple-900 focus:outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-100 transition-all"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">day end time</label>
+          <label className="block text-sm font-semibold text-purple-700 mb-2">day end time</label>
           <input
             type="time"
             value={user.dayEnd}
             onChange={(e) => handleChange("dayEnd", e.target.value)}
-            className="w-full px-4 py-2.5 text-base bg-gray-50 border border-gray-200 rounded-lg text-gray-900 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all"
+            className="w-full px-5 py-3 text-base bg-white/70 border-2 border-purple-200 rounded-2xl text-purple-900 focus:outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-100 transition-all"
           />
         </div>
       </div>
 
-      <div className="flex flex-col gap-3 mt-2">
+      <div className="flex flex-col gap-3 mt-4">
         <button
           onClick={handleResetAll}
-          className="w-full px-4 py-2.5 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 transition-colors duration-150"
+          className="w-full px-5 py-3 text-sm font-semibold text-purple-700 bg-purple-50 border-2 border-purple-200 rounded-2xl hover:bg-purple-100 active:scale-95 transition-all"
         >
-          reset all data
+          reset all data 🗑️
         </button>
 
-        <p className="text-xs text-gray-500 text-center">changes save automatically</p>
+        <p className="text-xs text-purple-500 text-center font-medium">everything saves automatically ✨</p>
       </div>
     </div>
   )

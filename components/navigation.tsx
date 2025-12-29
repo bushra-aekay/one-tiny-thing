@@ -8,27 +8,27 @@ export default function Navigation({
   onPageChange: (page: "home" | "graph" | "settings") => void
 }) {
   return (
-    <div className="flex border-t border-gray-200 bg-gray-50">
+    <div className="flex border-t-2 border-purple-200 bg-gradient-to-r from-purple-50 to-emerald-50">
       <button
         onClick={() => onPageChange("home")}
-        className={`flex-1 px-4 py-4 text-sm font-medium transition-colors ${
-          currentPage === "home" ? "bg-white text-blue-600 border-t-2 border-blue-500" : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+        className={`flex-1 px-4 py-4 text-sm font-semibold transition-all ${
+          currentPage === "home" ? "bg-white/80 text-purple-700 border-t-2 border-purple-500 -mt-0.5" : "text-purple-400 hover:text-purple-600 hover:bg-white/40"
         }`}
       >
         home
       </button>
       <button
         onClick={() => onPageChange("graph")}
-        className={`flex-1 px-4 py-4 text-sm font-medium transition-colors ${
-          currentPage === "graph" ? "bg-white text-blue-600 border-t-2 border-blue-500" : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+        className={`flex-1 px-4 py-4 text-sm font-semibold transition-all ${
+          currentPage === "graph" ? "bg-white/80 text-purple-700 border-t-2 border-purple-500 -mt-0.5" : "text-purple-400 hover:text-purple-600 hover:bg-white/40"
         }`}
       >
         progress
       </button>
       <button
         onClick={() => onPageChange("settings")}
-        className={`flex-1 px-4 py-4 text-sm font-medium transition-colors ${
-          currentPage === "settings" ? "bg-white text-blue-600 border-t-2 border-blue-500" : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+        className={`flex-1 px-4 py-4 text-sm font-semibold transition-all ${
+          currentPage === "settings" ? "bg-white/80 text-purple-700 border-t-2 border-purple-500 -mt-0.5" : "text-purple-400 hover:text-purple-600 hover:bg-white/40"
         }`}
       >
         settings

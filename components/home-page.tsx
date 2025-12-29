@@ -2,20 +2,39 @@
 
 import { useState, useEffect } from "react"
 import type { DayEntry } from "@/lib/storage"
-import { getData, getTodayKey, setDayEntry } from "@/lib/storage"
+import { getData, getTodayKey, setDayEntry, updateUser } from "@/lib/storage"
 
 export default function HomePage() {
   const [taskData, setTaskData] = useState<DayEntry | null>(null)
-  const [input, setInput] = useState("")  
+  const [input, setInput] = useState("")
   const [mounted, setMounted] = useState(false)
+  const [userName, setUserName] = useState("")
+  const [nameInput, setNameInput] = useState("")
+  const [showConfirmation, setShowConfirmation] = useState(false)
+  const [showCheckIn, setShowCheckIn] = useState(false)
 
   useEffect(() => {
     setMounted(true)
     const todayKey = getTodayKey()
     const data = getData()
-    setTaskData(data.days[todayKey] ?? null)
+    setUserName(data.user.name)
+    const todayTask = data.days[todayKey] ?? null
+    setTaskData(todayTask)
+
+    // Show check-in if task exists but not confirmed yet
+    if (todayTask && !todayTask.shipped) {
+      setShowCheckIn(true)
+    }
   }, [])
 
+
+  const handleSetName = () => {
+    if (!nameInput.trim()) return
+    const data = getData()
+    updateUser({ ...data.user, name: nameInput.trim() })
+    setUserName(nameInput.trim())
+    setNameInput("")
+  }
 
   const handleStart = () => {
     if (!input.trim()) return
@@ -30,6 +49,14 @@ export default function HomePage() {
     setDayEntry(todayKey, newTask)
     setTaskData(newTask)
     setInput("")
+    setShowConfirmation(true)
+    setShowCheckIn(false)
+  }
+
+  const handleChangeTask = () => {
+    setTaskData(null)
+    setShowConfirmation(false)
+    setShowCheckIn(false)
   }
 
   const handleShipped = () => {
@@ -39,88 +66,199 @@ export default function HomePage() {
     const updated: DayEntry = { ...taskData, shipped: true }
     setDayEntry(todayKey, updated)
     setTaskData(updated)
+    setShowCheckIn(false)
   }
 
-  const handleNotToday = () => {
-    if (!taskData) return
-
-    const todayKey = getTodayKey()
-    const updated: DayEntry = { ...taskData, shipped: false }
-    setDayEntry(todayKey, updated)
-    setTaskData(updated)
+  const handleNotYet = () => {
+    setShowCheckIn(false)
   }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
-      handleStart()
+      if (!userName) {
+        handleSetName()
+      } else {
+        handleStart()
+      }
     }
   }
 
   if (!mounted) return null
 
-  if (!taskData) {
+  // Step 1: Ask for username if not set
+  if (!userName) {
     return (
-      <div className="flex flex-col gap-8">
-        {getData().user.name && (
-          <p className="text-sm text-gray-500 text-center font-light">hey {getData().user.name} 👋</p>
-        )}
-
-        <div className="text-center space-y-2">
-          <h1 className="text-2xl font-normal text-gray-900 leading-tight">
-            one tiny thing
+      <div className="flex flex-col gap-8 items-center">
+        <div className="text-center space-y-3">
+          <div className="text-5xl mb-2">✨</div>
+          <h1 className="text-2xl font-semibold text-purple-900 leading-tight">
+            hey there!
           </h1>
-          <p className="text-sm text-gray-500 leading-relaxed">
-            what's the <span className="font-medium text-gray-700">smallest</span> thing you can ship today?
+          <p className="text-base text-purple-700 leading-relaxed">
+            what should we call you?
           </p>
         </div>
 
         <input
           type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
+          value={nameInput}
+          onChange={(e) => setNameInput(e.target.value)}
           onKeyPress={handleKeyPress}
-          placeholder="something small & achievable..."
-          className="w-full px-4 py-3 text-base bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all"
+          placeholder="your name..."
+          className="w-full px-5 py-3.5 text-base bg-white/70 border-2 border-purple-200 rounded-2xl text-purple-900 placeholder-purple-300 focus:outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-100 transition-all"
         />
 
         <button
-          onClick={handleStart}
-          className="w-full px-4 py-3 text-base font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600 active:bg-blue-700 transition-colors duration-150 shadow-sm"
+          onClick={handleSetName}
+          className="w-full px-5 py-3.5 text-base font-semibold text-white bg-gradient-to-r from-purple-400 to-purple-500 rounded-2xl hover:from-purple-500 hover:to-purple-600 active:scale-95 transition-all shadow-lg shadow-purple-200"
         >
-          let's do this
+          let's goooo 🚀
         </button>
       </div>
     )
   }
 
-  return (
-    <div className="flex flex-col gap-8">
-      <div className="space-y-3">
-        <p className="text-xs text-gray-400 uppercase tracking-wider font-medium">today's tiny thing</p>
-        <p className="text-lg text-gray-900 font-normal leading-relaxed break-words">{taskData.task}</p>
+  // Step 2: If already shipped today
+  if (taskData?.shipped) {
+    return (
+      <div className="flex flex-col gap-8 items-center text-center">
+        <div className="text-6xl mb-2">🎉</div>
+        <div className="space-y-3">
+          <h1 className="text-2xl font-semibold text-emerald-900 leading-tight">
+            you already shipped today!
+          </h1>
+          <p className="text-base text-emerald-700 leading-relaxed">
+            amazing work, {userName}! come back tomorrow for another tiny win ✨
+          </p>
+        </div>
+        <div className="w-full p-5 bg-emerald-50 border-2 border-emerald-200 rounded-2xl">
+          <p className="text-sm text-emerald-600 font-medium mb-2">today's achievement:</p>
+          <p className="text-base text-emerald-900">{taskData.task}</p>
+        </div>
       </div>
+    )
+  }
 
-      {!taskData.shipped && (
+  // Step 3: Show check-in if task exists and user is returning
+  if (showCheckIn && taskData) {
+    return (
+      <div className="flex flex-col gap-8">
+        <div className="text-center space-y-3">
+          <div className="text-5xl mb-2">👀</div>
+          <h1 className="text-2xl font-semibold text-purple-900 leading-tight">
+            hey {userName}!
+          </h1>
+          <p className="text-base text-purple-700 leading-relaxed">
+            did you finish your tiny thing?
+          </p>
+        </div>
+
+        <div className="w-full p-5 bg-purple-50 border-2 border-purple-200 rounded-2xl">
+          <p className="text-sm text-purple-600 font-medium mb-2">today's task:</p>
+          <p className="text-base text-purple-900">{taskData.task}</p>
+        </div>
+
         <button
           onClick={handleShipped}
-          className="w-full px-4 py-3 text-base font-medium text-white bg-green-500 rounded-lg hover:bg-green-600 active:bg-green-700 transition-colors duration-150 shadow-sm"
+          className="w-full px-5 py-3.5 text-base font-semibold text-white bg-gradient-to-r from-emerald-400 to-emerald-500 rounded-2xl hover:from-emerald-500 hover:to-emerald-600 active:scale-95 transition-all shadow-lg shadow-emerald-200"
         >
-          ✓ mark as shipped
+          yep, shipped it! ✓
         </button>
-      )}
 
-      {taskData.shipped && (
-        <div className="text-center py-4 bg-green-50 border border-green-200 rounded-lg">
-          <p className="text-base text-green-700 font-medium">🎉 shipped!</p>
-          <p className="text-sm text-green-600 mt-1">great work today</p>
+        <button
+          onClick={handleNotYet}
+          className="w-full px-4 py-3 text-sm font-medium text-purple-600 bg-transparent border-2 border-purple-200 rounded-2xl hover:bg-purple-50 transition-all"
+        >
+          not yet, still working on it
+        </button>
+      </div>
+    )
+  }
+
+  // Step 4: Show confirmation after setting task
+  if (showConfirmation && taskData) {
+    return (
+      <div className="flex flex-col gap-8 items-center text-center">
+        <div className="text-6xl mb-2">🌟</div>
+        <div className="space-y-3">
+          <h1 className="text-2xl font-semibold text-purple-900 leading-tight">
+            ok bet!
+          </h1>
+          <p className="text-base text-purple-700 leading-relaxed">
+            i'll check in with you later to see how it went~ good luck! 💜
+          </p>
         </div>
-      )}
+        <div className="w-full p-5 bg-purple-50 border-2 border-purple-200 rounded-2xl">
+          <p className="text-sm text-purple-600 font-medium mb-2">your tiny thing:</p>
+          <p className="text-base text-purple-900">{taskData.task}</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Step 5: If task already set for today, offer to change it
+  if (taskData && !showConfirmation) {
+    return (
+      <div className="flex flex-col gap-8 text-center">
+        <div className="text-5xl mb-2">📝</div>
+        <div className="space-y-3">
+          <h1 className="text-2xl font-semibold text-purple-900 leading-tight">
+            you already have a task!
+          </h1>
+          <p className="text-base text-purple-700 leading-relaxed">
+            wanna change it?
+          </p>
+        </div>
+
+        <div className="w-full p-5 bg-purple-50 border-2 border-purple-200 rounded-2xl">
+          <p className="text-sm text-purple-600 font-medium mb-2">current task:</p>
+          <p className="text-base text-purple-900">{taskData.task}</p>
+        </div>
+
+        <button
+          onClick={handleChangeTask}
+          className="w-full px-5 py-3.5 text-base font-semibold text-white bg-gradient-to-r from-purple-400 to-purple-500 rounded-2xl hover:from-purple-500 hover:to-purple-600 active:scale-95 transition-all shadow-lg shadow-purple-200"
+        >
+          yeah, let me change it
+        </button>
+
+        <button
+          onClick={() => setShowCheckIn(true)}
+          className="w-full px-4 py-3 text-sm font-medium text-purple-600 bg-transparent border-2 border-purple-200 rounded-2xl hover:bg-purple-50 transition-all"
+        >
+          nah, keep it
+        </button>
+      </div>
+    )
+  }
+
+  // Step 6: Fresh task entry
+  return (
+    <div className="flex flex-col gap-8">
+      <div className="text-center space-y-3">
+        <div className="text-5xl mb-2">✨</div>
+        <h1 className="text-2xl font-semibold text-purple-900 leading-tight">
+          hey {userName}!
+        </h1>
+        <p className="text-base text-purple-700 leading-relaxed">
+          what's the <span className="font-bold text-purple-900">tiniest</span> thing you can ship today?
+        </p>
+      </div>
+
+      <input
+        type="text"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        onKeyPress={handleKeyPress}
+        placeholder="something super small & doable..."
+        className="w-full px-5 py-3.5 text-base bg-white/70 border-2 border-purple-200 rounded-2xl text-purple-900 placeholder-purple-300 focus:outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-100 transition-all"
+      />
 
       <button
-        onClick={handleNotToday}
-        className="w-full px-4 py-2 text-sm font-normal text-gray-500 bg-transparent border border-gray-200 rounded-lg hover:bg-gray-50 hover:text-gray-600 transition-colors duration-150"
+        onClick={handleStart}
+        className="w-full px-5 py-3.5 text-base font-semibold text-white bg-gradient-to-r from-emerald-400 to-emerald-500 rounded-2xl hover:from-emerald-500 hover:to-emerald-600 active:scale-95 transition-all shadow-lg shadow-emerald-200"
       >
-        skip today
+        let's do this! 🔥
       </button>
     </div>
   )
