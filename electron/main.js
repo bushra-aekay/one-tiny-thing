@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, ipcMain, Notification, Tray, nativeImage } = require("electron")
+const { app, BrowserWindow, Menu, ipcMain, Notification, Tray, nativeImage, session } = require("electron")
 const isDev = require("electron-is-dev")
 const path = require("path")
 const fs = require("fs")
@@ -13,12 +13,112 @@ let lastCheckDate = null
 const userDataPath = app.getPath('userData')
 const settingsPath = path.join(userDataPath, 'user-settings.json')
 
+// ========== SECURITY UTILITIES ==========
+
+// Rate limiting for IPC calls
+const ipcRateLimits = new Map()
+const IPC_RATE_LIMIT = 10 // calls per second
+const IPC_RATE_WINDOW = 1000 // 1 second
+
+function checkRateLimit(channel) {
+  const now = Date.now()
+  const key = channel
+
+  if (!ipcRateLimits.has(key)) {
+    ipcRateLimits.set(key, { count: 1, resetTime: now + IPC_RATE_WINDOW })
+    return true
+  }
+
+  const limit = ipcRateLimits.get(key)
+
+  if (now > limit.resetTime) {
+    limit.count = 1
+    limit.resetTime = now + IPC_RATE_WINDOW
+    return true
+  }
+
+  if (limit.count >= IPC_RATE_LIMIT) {
+    console.warn(`Rate limit exceeded for IPC channel: ${channel}`)
+    return false
+  }
+
+  limit.count++
+  return true
+}
+
+// Input validation for IPC messages
+function validateSettings(settings) {
+  if (!settings || typeof settings !== 'object') return false
+
+  // Validate structure
+  if (settings.name && typeof settings.name !== 'string') return false
+  if (settings.dayStart && !/^\d{2}:\d{2}$/.test(settings.dayStart)) return false
+  if (settings.dayEnd && !/^\d{2}:\d{2}$/.test(settings.dayEnd)) return false
+
+  // Prevent injection attacks - sanitize strings
+  if (settings.name && settings.name.length > 100) return false
+
+  if (settings.notifications && typeof settings.notifications !== 'object') return false
+  if (settings.notifications) {
+    if (typeof settings.notifications.enableReminders !== 'boolean') return false
+    if (typeof settings.notifications.enableCheckIns !== 'boolean') return false
+  }
+
+  return true
+}
+
+function validateFullData(data) {
+  if (!data || typeof data !== 'object') return false
+  if (!data.user || !validateSettings(data.user)) return false
+
+  // Validate days data structure
+  if (data.days && typeof data.days !== 'object') return false
+  if (data.days) {
+    for (const [key, entry] of Object.entries(data.days)) {
+      // Validate date format YYYY-MM-DD
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(key)) return false
+
+      // Validate entry structure
+      if (!entry || typeof entry !== 'object') return false
+      if (typeof entry.task !== 'string' || entry.task.length > 500) return false
+      if (typeof entry.startedAt !== 'number') return false
+      if (typeof entry.shipped !== 'boolean') return false
+    }
+  }
+
+  return true
+}
+
+// Sanitize file paths to prevent directory traversal
+function sanitizePath(filePath) {
+  const normalized = path.normalize(filePath)
+  const resolved = path.resolve(normalized)
+
+  // Ensure path is within userData directory
+  if (!resolved.startsWith(userDataPath)) {
+    throw new Error('Invalid file path')
+  }
+
+  return resolved
+}
+
+// ========== END SECURITY UTILITIES ==========
+
 // Load settings from file
 function loadSettings() {
   try {
-    if (fs.existsSync(settingsPath)) {
-      const data = fs.readFileSync(settingsPath, 'utf8')
-      return JSON.parse(data)
+    const safePath = sanitizePath(settingsPath)
+    if (fs.existsSync(safePath)) {
+      const data = fs.readFileSync(safePath, 'utf8')
+      const parsed = JSON.parse(data)
+
+      // Validate loaded data
+      if (!validateFullData(parsed)) {
+        console.error('Invalid settings file format')
+        return null
+      }
+
+      return parsed
     }
   } catch (e) {
     console.error('Failed to load settings:', e)
@@ -29,7 +129,18 @@ function loadSettings() {
 // Save settings to file
 function saveSettings(settings) {
   try {
-    fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2))
+    // Validate before saving
+    if (!validateFullData(settings)) {
+      console.error('Invalid settings data, not saving')
+      return
+    }
+
+    const safePath = sanitizePath(settingsPath)
+
+    // Atomic write using temp file
+    const tempPath = `${safePath}.tmp`
+    fs.writeFileSync(tempPath, JSON.stringify(settings, null, 2), { mode: 0o600 })
+    fs.renameSync(tempPath, safePath)
   } catch (e) {
     console.error('Failed to save settings:', e)
   }
@@ -85,11 +196,32 @@ const createWindow = () => {
       nodeIntegration: false,
       contextIsolation: true,
       enableRemoteModule: false,
+      sandbox: true, // Enable sandbox for additional security
+      webviewTag: false, // Disable webview tag
+      allowRunningInsecureContent: false,
+      experimentalFeatures: false,
       preload: path.join(__dirname, 'preload.js')
     },
     icon: path.join(__dirname, "../public/icon.ico"),
     backgroundColor: '#00000000',
     title: '🌱 one tiny thing',
+  })
+
+  // Security: Set CSP headers
+  mainWindow.webContents.session.webRequest.onHeadersReceived((details, callback) => {
+    callback({
+      responseHeaders: {
+        ...details.responseHeaders,
+        'Content-Security-Policy': [
+          isDev
+            ? "default-src 'self' 'unsafe-inline' 'unsafe-eval' localhost:* ws://localhost:*; img-src 'self' data: blob:;"
+            : "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self';"
+        ],
+        'X-Content-Type-Options': ['nosniff'],
+        'X-Frame-Options': ['DENY'],
+        'X-XSS-Protection': ['1; mode=block']
+      }
+    })
   })
 
   const startUrl = isDev ? "http://localhost:3000" : `file://${path.join(__dirname, "../out/index.html")}`
@@ -99,6 +231,50 @@ const createWindow = () => {
   if (isDev) {
     mainWindow.webContents.openDevTools()
   }
+
+  // Security: Prevent navigation to external URLs
+  mainWindow.webContents.on('will-navigate', (event, navigationUrl) => {
+    const parsedUrl = new URL(navigationUrl)
+    const validOrigins = isDev
+      ? ['localhost', '127.0.0.1']
+      : ['file:']
+
+    const isValid = validOrigins.some(origin =>
+      parsedUrl.protocol.startsWith('file') || parsedUrl.hostname === origin
+    )
+
+    if (!isValid) {
+      console.warn('Navigation blocked:', navigationUrl)
+      event.preventDefault()
+    }
+  })
+
+  // Security: Prevent opening new windows
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    console.warn('Window open blocked:', url)
+    return { action: 'deny' }
+  })
+
+  // Security: Disable web requests to external domains
+  mainWindow.webContents.session.webRequest.onBeforeRequest((details, callback) => {
+    const url = new URL(details.url)
+    const allowedProtocols = ['file:', 'http:', 'https:', 'devtools:', 'chrome-extension:']
+    const allowedHosts = isDev ? ['localhost', '127.0.0.1'] : []
+
+    if (!allowedProtocols.includes(url.protocol)) {
+      return callback({ cancel: true })
+    }
+
+    if (url.protocol === 'https:' || url.protocol === 'http:') {
+      const isAllowed = allowedHosts.includes(url.hostname)
+      if (!isAllowed && !isDev) {
+        console.warn('External request blocked:', details.url)
+        return callback({ cancel: true })
+      }
+    }
+
+    callback({})
+  })
 
   // Prevent window from closing, hide it instead
   mainWindow.on('close', (event) => {
@@ -272,13 +448,30 @@ ipcMain.on('window-close', () => {
 
 // IPC handlers for user settings and data
 ipcMain.on('update-settings', (event, settings) => {
+  // Security: Rate limiting
+  if (!checkRateLimit('update-settings')) return
+
+  // Security: Validate input
+  if (!validateSettings(settings)) {
+    console.error('Invalid settings received via IPC')
+    return
+  }
+
   userSettings = settings
-  saveSettings(settings) // Persist settings to file
+  saveSettings(settings)
   scheduleNotifications(settings)
 })
 
 ipcMain.on('update-full-data', (event, data) => {
-  // Receive full data including days for missed day checking
+  // Security: Rate limiting
+  if (!checkRateLimit('update-full-data')) return
+
+  // Security: Validate input
+  if (!validateFullData(data)) {
+    console.error('Invalid full data received via IPC')
+    return
+  }
+
   if (data && data.user) {
     userSettings = data
     saveSettings(data)
@@ -287,6 +480,15 @@ ipcMain.on('update-full-data', (event, data) => {
 })
 
 ipcMain.on('missed-days-detected', (event, count) => {
+  // Security: Rate limiting
+  if (!checkRateLimit('missed-days-detected')) return
+
+  // Security: Validate input
+  if (typeof count !== 'number' || count < 0 || count > 365) {
+    console.error('Invalid missed days count')
+    return
+  }
+
   if (count >= 2) {
     showNotification(
       "hey, I miss you!",
@@ -296,6 +498,48 @@ ipcMain.on('missed-days-detected', (event, count) => {
 })
 
 app.on("ready", () => {
+  // Security: Set app-wide security defaults
+  app.on('web-contents-created', (event, contents) => {
+    // Disable navigation to any external content
+    contents.on('will-navigate', (event, navigationUrl) => {
+      const parsedUrl = new URL(navigationUrl)
+      const isLocalhost = parsedUrl.hostname === 'localhost' || parsedUrl.hostname === '127.0.0.1'
+      const isFile = parsedUrl.protocol === 'file:'
+
+      if (!isLocalhost && !isFile && !isDev) {
+        event.preventDefault()
+      }
+    })
+
+    // Prevent new window creation
+    contents.setWindowOpenHandler(() => {
+      return { action: 'deny' }
+    })
+  })
+
+  // Security: Set permission request handler
+  session.defaultSession.setPermissionRequestHandler((webContents, permission, callback) => {
+    const allowedPermissions = ['notifications'] // Only allow notifications
+
+    if (allowedPermissions.includes(permission)) {
+      callback(true)
+    } else {
+      console.warn(`Permission denied: ${permission}`)
+      callback(false)
+    }
+  })
+
+  // Security: Block all permission checks except notifications
+  session.defaultSession.setPermissionCheckHandler((webContents, permission) => {
+    return permission === 'notifications'
+  })
+
+  // Security: Prevent downloads
+  session.defaultSession.on('will-download', (event, item, webContents) => {
+    event.preventDefault()
+    console.warn('Download blocked:', item.getFilename())
+  })
+
   Menu.setApplicationMenu(null)
   createTray() // Create system tray icon
   createWindow()
