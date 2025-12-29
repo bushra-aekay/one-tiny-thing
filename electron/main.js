@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu } = require("electron")
+const { app, BrowserWindow, Menu, ipcMain } = require("electron")
 const isDev = require("electron-is-dev")
 const path = require("path")
 
@@ -7,7 +7,7 @@ let mainWindow
 const createWindow = () => {
   mainWindow = new BrowserWindow({
     width: 420,
-    height: 720,
+    height: 580,
     frame: false,
     transparent: true,
     resizable: false,
@@ -15,6 +15,7 @@ const createWindow = () => {
       nodeIntegration: false,
       contextIsolation: true,
       enableRemoteModule: false,
+      preload: path.join(__dirname, 'preload.js')
     },
     icon: path.join(__dirname, "../public/icon.png"),
     backgroundColor: '#00000000',
@@ -32,6 +33,19 @@ const createWindow = () => {
     mainWindow = null
   })
 }
+
+// IPC handlers for window controls
+ipcMain.on('window-minimize', () => {
+  if (mainWindow) {
+    mainWindow.minimize()
+  }
+})
+
+ipcMain.on('window-close', () => {
+  if (mainWindow) {
+    mainWindow.close()
+  }
+})
 
 app.on("ready", () => {
   Menu.setApplicationMenu(null)

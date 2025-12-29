@@ -10,6 +10,8 @@ export default function HomePage() {
   const [mounted, setMounted] = useState(false)
   const [userName, setUserName] = useState("")
   const [nameInput, setNameInput] = useState("")
+  const [dayStartInput, setDayStartInput] = useState("09:00")
+  const [dayEndInput, setDayEndInput] = useState("17:00")
   const [showConfirmation, setShowConfirmation] = useState(false)
   const [showCheckIn, setShowCheckIn] = useState(false)
 
@@ -31,7 +33,12 @@ export default function HomePage() {
   const handleSetName = () => {
     if (!nameInput.trim()) return
     const data = getData()
-    updateUser({ ...data.user, name: nameInput.trim() })
+    updateUser({
+      ...data.user,
+      name: nameInput.trim(),
+      dayStart: dayStartInput,
+      dayEnd: dayEndInput
+    })
     setUserName(nameInput.trim())
     setNameInput("")
   }
@@ -88,28 +95,52 @@ export default function HomePage() {
   // Step 1: Ask for username if not set
   if (!userName) {
     return (
-      <div className="flex flex-col gap-4 items-center">
+      <div className="flex flex-col gap-3">
         <div className="text-center space-y-1">
-          <h1 className="text-xl font-medium text-[#2E6467]">
+          <h1 className="text-lg font-medium text-[#2E6467]">
             hey there :)
           </h1>
-          <p className="text-sm text-[#5B7785]">
-            what should we call you?
+          <p className="text-xs text-[#5B7785]">
+            let's get you set up
           </p>
         </div>
 
-        <input
-          type="text"
-          value={nameInput}
-          onChange={(e) => setNameInput(e.target.value)}
-          onKeyPress={handleKeyPress}
-          placeholder="your name..."
-          className="w-full px-4 py-2.5 text-sm bg-[#ECE1E9]/30 border border-[#5B7785]/20 rounded-xl text-[#2E6467] placeholder-[#5B7785]/40 focus:outline-none focus:border-[#5B7785]/40 focus:ring-2 focus:ring-[#5B7785]/10 transition-all"
-        />
+        <div>
+          <label className="block text-xs font-medium text-[#5B7785] mb-1">name</label>
+          <input
+            type="text"
+            value={nameInput}
+            onChange={(e) => setNameInput(e.target.value)}
+            onKeyPress={handleKeyPress}
+            placeholder="your name..."
+            className="w-full px-3 py-2 text-sm bg-[#ECE1E9]/30 border border-[#5B7785]/20 rounded-lg text-[#2E6467] placeholder-[#5B7785]/40 focus:outline-none focus:border-[#5B7785]/40 focus:ring-2 focus:ring-[#5B7785]/10 transition-all"
+          />
+        </div>
+
+        <div className="grid grid-cols-2 gap-2">
+          <div>
+            <label className="block text-xs font-medium text-[#5B7785] mb-1">day start</label>
+            <input
+              type="time"
+              value={dayStartInput}
+              onChange={(e) => setDayStartInput(e.target.value)}
+              className="w-full px-3 py-2 text-sm bg-[#ECE1E9]/30 border border-[#5B7785]/20 rounded-lg text-[#2E6467] focus:outline-none focus:border-[#5B7785]/40 focus:ring-2 focus:ring-[#5B7785]/10 transition-all time-input"
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-medium text-[#5B7785] mb-1">day end</label>
+            <input
+              type="time"
+              value={dayEndInput}
+              onChange={(e) => setDayEndInput(e.target.value)}
+              className="w-full px-3 py-2 text-sm bg-[#ECE1E9]/30 border border-[#5B7785]/20 rounded-lg text-[#2E6467] focus:outline-none focus:border-[#5B7785]/40 focus:ring-2 focus:ring-[#5B7785]/10 transition-all time-input"
+            />
+          </div>
+        </div>
 
         <button
           onClick={handleSetName}
-          className="w-full px-4 py-2.5 text-sm font-medium text-white bg-[#5B7785] rounded-xl hover:bg-[#2E6467] active:scale-[0.98] transition-all"
+          className="w-full px-4 py-2.5 text-sm font-medium text-white bg-[#5B7785] rounded-xl hover:bg-[#2E6467] active:scale-[0.98] transition-all mt-2"
         >
           continue
         </button>
@@ -164,7 +195,7 @@ export default function HomePage() {
           </button>
           <button
             onClick={handleNotYet}
-            className="px-4 py-2.5 text-xs font-medium text-[#5B7785] bg-[#ECE1E9]/30 rounded-xl hover:bg-[#ECE1E9]/50 transition-all"
+            className="flex-1 px-4 py-2.5 text-sm font-medium text-[#5B7785] bg-[#ECE1E9]/30 rounded-xl hover:bg-[#ECE1E9]/50 transition-all"
           >
             not yet
           </button>
@@ -220,7 +251,7 @@ export default function HomePage() {
           </button>
           <button
             onClick={() => setShowCheckIn(true)}
-            className="px-4 py-2.5 text-xs font-medium text-[#5B7785] bg-[#ECE1E9]/30 rounded-xl hover:bg-[#ECE1E9]/50 transition-all"
+            className="flex-1 px-4 py-2.5 text-sm font-medium text-[#5B7785] bg-[#ECE1E9]/30 rounded-xl hover:bg-[#ECE1E9]/50 transition-all"
           >
             keep it
           </button>
