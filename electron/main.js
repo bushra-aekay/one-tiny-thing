@@ -1,11 +1,78 @@
-const { app, BrowserWindow, Menu, ipcMain, Notification } = require("electron")
+const { app, BrowserWindow, Menu, ipcMain, Notification, Tray, nativeImage } = require("electron")
 const isDev = require("electron-is-dev")
 const path = require("path")
+const fs = require("fs")
 
 let mainWindow
+let tray = null
 let notificationTimers = []
 let userSettings = null
 let lastCheckDate = null
+
+// Path to store settings persistently
+const userDataPath = app.getPath('userData')
+const settingsPath = path.join(userDataPath, 'user-settings.json')
+
+// Load settings from file
+function loadSettings() {
+  try {
+    if (fs.existsSync(settingsPath)) {
+      const data = fs.readFileSync(settingsPath, 'utf8')
+      return JSON.parse(data)
+    }
+  } catch (e) {
+    console.error('Failed to load settings:', e)
+  }
+  return null
+}
+
+// Save settings to file
+function saveSettings(settings) {
+  try {
+    fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2))
+  } catch (e) {
+    console.error('Failed to save settings:', e)
+  }
+}
+
+// Create tray icon
+function createTray() {
+  // Create a simple tray icon
+  const iconPath = path.join(__dirname, '../public/icon.png')
+  const trayIcon = nativeImage.createFromPath(iconPath)
+
+  tray = new Tray(trayIcon.resize({ width: 16, height: 16 }))
+
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: 'open',
+      click: () => {
+        if (mainWindow) {
+          mainWindow.show()
+          mainWindow.focus()
+        }
+      }
+    },
+    {
+      label: 'quit',
+      click: () => {
+        app.isQuitting = true
+        app.quit()
+      }
+    }
+  ])
+
+  tray.setToolTip('🌱 one tiny thing')
+  tray.setContextMenu(contextMenu)
+
+  // Click on tray icon to show window
+  tray.on('click', () => {
+    if (mainWindow) {
+      mainWindow.show()
+      mainWindow.focus()
+    }
+  })
+}
 
 const createWindow = () => {
   mainWindow = new BrowserWindow({
@@ -33,9 +100,25 @@ const createWindow = () => {
     mainWindow.webContents.openDevTools()
   }
 
+  // Prevent window from closing, hide it instead
+  mainWindow.on('close', (event) => {
+    if (!app.isQuitting) {
+      event.preventDefault()
+      mainWindow.hide()
+      return false
+    }
+  })
+
   mainWindow.on("closed", () => {
     mainWindow = null
   })
+
+  // Load saved settings and schedule notifications
+  const savedSettings = loadSettings()
+  if (savedSettings) {
+    userSettings = savedSettings
+    scheduleNotifications(savedSettings)
+  }
 }
 
 // Helper functions for notifications
@@ -141,9 +224,29 @@ function checkMissedDays(data) {
   if (lastCheckDate === todayStr) return
   lastCheckDate = todayStr
 
-  // Request data from renderer
-  if (mainWindow && mainWindow.webContents) {
-    mainWindow.webContents.send('check-missed-days')
+  // Check if we have days data
+  if (data.days) {
+    let missedDays = 0
+
+    // Count consecutive missed days
+    for (let i = 1; i <= 7; i++) {
+      const checkDate = new Date(today)
+      checkDate.setDate(checkDate.getDate() - i)
+      const dateStr = formatDate(checkDate)
+
+      if (!data.days[dateStr] || !data.days[dateStr].shipped) {
+        missedDays++
+      } else {
+        break
+      }
+    }
+
+    if (missedDays >= 2) {
+      showNotification(
+        "hey, I miss you!",
+        `it's been ${missedDays} days since we last chatted. everything okay? :)`
+      )
+    }
   }
 }
 
@@ -163,14 +266,24 @@ ipcMain.on('window-minimize', () => {
 
 ipcMain.on('window-close', () => {
   if (mainWindow) {
-    mainWindow.close()
+    mainWindow.hide() // Hide instead of close to keep running in background
   }
 })
 
 // IPC handlers for user settings and data
 ipcMain.on('update-settings', (event, settings) => {
   userSettings = settings
+  saveSettings(settings) // Persist settings to file
   scheduleNotifications(settings)
+})
+
+ipcMain.on('update-full-data', (event, data) => {
+  // Receive full data including days for missed day checking
+  if (data && data.user) {
+    userSettings = data
+    saveSettings(data)
+    scheduleNotifications(data.user)
+  }
 })
 
 ipcMain.on('missed-days-detected', (event, count) => {
@@ -184,11 +297,33 @@ ipcMain.on('missed-days-detected', (event, count) => {
 
 app.on("ready", () => {
   Menu.setApplicationMenu(null)
+  createTray() // Create system tray icon
   createWindow()
+
+  // Also schedule a daily check for missed days at midnight
+  const now = new Date()
+  const tomorrow = new Date(now)
+  tomorrow.setDate(tomorrow.getDate() + 1)
+  tomorrow.setHours(0, 0, 0, 0)
+  const timeUntilMidnight = tomorrow - now
+
+  setTimeout(() => {
+    if (userSettings && userSettings.notifications && userSettings.notifications.enableCheckIns) {
+      checkMissedDays(userSettings)
+    }
+    // Reschedule for next midnight
+    setInterval(() => {
+      if (userSettings && userSettings.notifications && userSettings.notifications.enableCheckIns) {
+        checkMissedDays(userSettings)
+      }
+    }, 24 * 60 * 60 * 1000) // Every 24 hours
+  }, timeUntilMidnight)
 })
 
 app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
+  // Don't quit - keep running in background with tray
+  // Only quit on macOS if explicitly requested
+  if (process.platform === "darwin" && app.isQuitting) {
     app.quit()
   }
 })
@@ -196,5 +331,12 @@ app.on("window-all-closed", () => {
 app.on("activate", () => {
   if (mainWindow === null) {
     createWindow()
+  } else {
+    mainWindow.show()
   }
+})
+
+// Quit all windows when app quits
+app.on("before-quit", () => {
+  app.isQuitting = true
 })

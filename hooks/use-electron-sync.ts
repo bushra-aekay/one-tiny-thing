@@ -10,15 +10,15 @@ export function useElectronSync() {
 
     const electronAPI = (window as any).electronAPI
 
-    // Send initial settings
+    // Send initial full data (settings + days)
     const data = getData()
-    electronAPI.updateSettings(data.user)
+    electronAPI.updateFullData(data)
 
-    // Listen for settings changes
+    // Listen for data changes and send to Electron
     const checkInterval = setInterval(() => {
       const currentData = getData()
-      electronAPI.updateSettings(currentData.user)
-    }, 5000) // Check every 5 seconds
+      electronAPI.updateFullData(currentData)
+    }, 10000) // Check every 10 seconds
 
     // Listen for missed days check from Electron
     electronAPI.onCheckMissedDays(() => {
