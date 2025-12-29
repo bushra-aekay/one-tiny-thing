@@ -5,10 +5,15 @@ import Navigation from "@/components/navigation"
 import HomePage from "@/components/home-page"
 import GraphPage from "@/components/graph-page"
 import SettingsPage from "@/components/settings-page"
+import WindowControls from "@/components/window-controls"
+import { useElectronSync } from "@/hooks/use-electron-sync"
 
 export default function Page() {
   const [currentPage, setCurrentPage] = useState<"home" | "graph" | "settings">("home")
   const [mounted, setMounted] = useState(false)
+
+  // Sync with Electron for notifications
+  useElectronSync()
 
   useEffect(() => {
     setMounted(true)
@@ -19,14 +24,19 @@ export default function Page() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center w-screen h-screen bg-gradient-to-br from-[#faf9f7] to-[#f5f1e8]">
-      <div className="w-80 flex flex-col bg-[#fbf8f5] rounded-3xl shadow-sm ring-1 ring-[#f0eae2] overflow-hidden">
-        <div className="px-6 py-10 flex-1">
-          {currentPage === "home" && <HomePage />}
-          {currentPage === "graph" && <GraphPage />}
-          {currentPage === "settings" && <SettingsPage />}
+    <div className="w-full h-screen flex items-center justify-center overflow-hidden bg-transparent">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col relative" style={{ height: '420px' }}>
+        <WindowControls />
+        <div className="flex-1 overflow-y-auto px-6 custom-scrollbar">
+          <div className="min-h-full flex items-center py-10">
+            {currentPage === "home" && <HomePage />}
+            {currentPage === "graph" && <GraphPage />}
+            {currentPage === "settings" && <SettingsPage />}
+          </div>
         </div>
-        <Navigation currentPage={currentPage} onPageChange={setCurrentPage} />
+        <div className="px-4 pb-4 flex-shrink-0">
+          <Navigation currentPage={currentPage} onPageChange={setCurrentPage} />
+        </div>
       </div>
     </div>
   )

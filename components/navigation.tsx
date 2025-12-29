@@ -8,27 +8,27 @@ export default function Navigation({
   onPageChange: (page: "home" | "graph" | "settings") => void
 }) {
   return (
-    <div className="flex">
+    <div className="flex gap-2 bg-[#ECE1E9]/40 p-1.5 rounded-xl">
       <button
         onClick={() => onPageChange("home")}
-        className={`flex-1 px-4 py-3 text-xs font-medium transition-colors ${
-          currentPage === "home" ? "bg-[#efe9df] text-[#3d3d3d]" : "bg-transparent text-[#6b665f] hover:bg-[#f6f4f2]"
+        className={`flex-1 px-3 py-2 text-xs font-medium rounded-lg transition-all ${
+          currentPage === "home" ? "bg-white text-[#2E6467] shadow-sm" : "text-[#5B7785] hover:text-[#2E6467] hover:bg-white/50"
         }`}
       >
         home
       </button>
       <button
         onClick={() => onPageChange("graph")}
-        className={`flex-1 px-4 py-3 text-xs font-medium transition-colors ${
-          currentPage === "graph" ? "bg-[#efe9df] text-[#3d3d3d]" : "bg-transparent text-[#6b665f] hover:bg-[#f6f4f2]"
+        className={`flex-1 px-3 py-2 text-xs font-medium rounded-lg transition-all ${
+          currentPage === "graph" ? "bg-white text-[#2E6467] shadow-sm" : "text-[#5B7785] hover:text-[#2E6467] hover:bg-white/50"
         }`}
       >
-        graph
+        progress
       </button>
       <button
         onClick={() => onPageChange("settings")}
-        className={`flex-1 px-4 py-3 text-xs font-medium transition-colors ${
-          currentPage === "settings" ? "bg-[#efe9df] text-[#3d3d3d]" : "bg-transparent text-[#6b665f] hover:bg-[#f6f4f2]"
+        className={`flex-1 px-3 py-2 text-xs font-medium rounded-lg transition-all ${
+          currentPage === "settings" ? "bg-white text-[#2E6467] shadow-sm" : "text-[#5B7785] hover:text-[#2E6467] hover:bg-white/50"
         }`}
       >
         settings

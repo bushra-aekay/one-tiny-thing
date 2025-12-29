@@ -5,10 +5,14 @@ import type { StorageData } from "@/lib/storage"
 import { getData, updateUser, resetAllData } from "@/lib/storage"
 
 export default function SettingsPage() {
-  const [user, setUser] = useState({
+  const [user, setUser] = useState<StorageData['user']>({
     name: "",
     dayStart: "09:00",
     dayEnd: "17:00",
+    notifications: {
+      enableReminders: true,
+      enableCheckIns: true
+    }
   })
   const [mounted, setMounted] = useState(false)
 
@@ -18,64 +22,124 @@ export default function SettingsPage() {
     setUser(data.user)
   }, [])
 
-  const handleChange = (key: keyof typeof user, value: string) => {
+  const handleChange = (key: keyof StorageData['user'], value: any) => {
     const updated = { ...user, [key]: value }
+    setUser(updated)
+    updateUser(updated)
+  }
+
+  const handleNotificationToggle = (key: keyof StorageData['user']['notifications']) => {
+    const updated = {
+      ...user,
+      notifications: {
+        ...user.notifications,
+        [key]: !user.notifications[key]
+      }
+    }
     setUser(updated)
     updateUser(updated)
   }
 
   const handleResetAll = () => {
     resetAllData()
-    const defaults: StorageData['user'] = { name: "", dayStart: "09:00", dayEnd: "17:00" }
+    const defaults: StorageData['user'] = {
+      name: "",
+      dayStart: "09:00",
+      dayEnd: "17:00",
+      notifications: {
+        enableReminders: true,
+        enableCheckIns: true
+      }
+    }
     setUser(defaults)
   }
 
   if (!mounted) return null
 
   return (
-    <div className="flex flex-col gap-4">
-      <div>
-        <label className="block text-xs font-medium text-[#8f867d] mb-2 uppercase tracking-widest">name</label>
-        <input
-          type="text"
-          value={user.name}
-          onChange={(e) => handleChange("name", e.target.value)}
-          placeholder="your name"
-          className="w-full px-4 py-2 text-sm bg-[#f6f4f2] rounded-2xl text-[#3d3d3d] focus:outline-none transition-colors"
-        />
+    <div className="flex flex-col gap-4 w-full">
+      <div className="text-center space-y-1">
+        <h2 className="text-lg font-medium text-[#2E6467]">settings</h2>
+        <p className="text-xs text-[#5B7785]">make this yours</p>
       </div>
 
-      <div>
-        <label className="block text-xs font-medium text-[#b8b1a6] mb-2 uppercase tracking-widest">
-          day start time
-        </label>
-        <input
-          type="time"
-          value={user.dayStart}
-          onChange={(e) => handleChange("dayStart", e.target.value)}
-          className="w-full px-4 py-2 text-sm bg-[#f6f4f2] rounded-2xl text-[#3d3d3d] focus:outline-none transition-colors"
-        />
+      <div className="space-y-4">
+        <div>
+          <label className="block text-xs font-medium text-[#5B7785] mb-1.5">what should I call you?</label>
+          <input
+            type="text"
+            value={user.name}
+            onChange={(e) => handleChange("name", e.target.value)}
+            placeholder="whatever feels right..."
+            className="w-full px-4 py-2.5 text-sm bg-[#ECE1E9]/30 border border-[#5B7785]/20 rounded-xl text-[#2E6467] placeholder-[#5B7785]/40 focus:outline-none focus:border-[#5B7785]/40 focus:ring-2 focus:ring-[#5B7785]/10 transition-all"
+          />
+        </div>
+
+        <div>
+          <label className="block text-xs font-medium text-[#5B7785] mb-1.5">
+            when does your day begin?
+          </label>
+          <input
+            type="time"
+            value={user.dayStart}
+            onChange={(e) => handleChange("dayStart", e.target.value)}
+            className="w-full px-4 py-2.5 text-sm bg-[#ECE1E9]/30 border border-[#5B7785]/20 rounded-xl text-[#2E6467] focus:outline-none focus:border-[#5B7785]/40 focus:ring-2 focus:ring-[#5B7785]/10 transition-all"
+          />
+        </div>
+
+        <div>
+          <label className="block text-xs font-medium text-[#5B7785] mb-1.5">and when does it wind down?</label>
+          <input
+            type="time"
+            value={user.dayEnd}
+            onChange={(e) => handleChange("dayEnd", e.target.value)}
+            className="w-full px-4 py-2.5 text-sm bg-[#ECE1E9]/30 border border-[#5B7785]/20 rounded-xl text-[#2E6467] focus:outline-none focus:border-[#5B7785]/40 focus:ring-2 focus:ring-[#5B7785]/10 transition-all"
+          />
+        </div>
+
+        <div className="pt-2 border-t border-[#5B7785]/10">
+          <p className="text-xs font-medium text-[#5B7785] mb-3">gentle reminders</p>
+          <div className="space-y-3">
+            <label className="flex items-center justify-between cursor-pointer">
+              <span className="text-xs text-[#2E6467]">nudge me during the day</span>
+              <div className="relative">
+                <input
+                  type="checkbox"
+                  checked={user.notifications.enableReminders}
+                  onChange={() => handleNotificationToggle("enableReminders")}
+                  className="sr-only peer"
+                />
+                <div className="w-9 h-5 bg-[#5B7785]/20 rounded-full peer-checked:bg-[#C29762] transition-colors"></div>
+                <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full transition-transform peer-checked:translate-x-4"></div>
+              </div>
+            </label>
+
+            <label className="flex items-center justify-between cursor-pointer">
+              <span className="text-xs text-[#2E6467]">check in if I go quiet</span>
+              <div className="relative">
+                <input
+                  type="checkbox"
+                  checked={user.notifications.enableCheckIns}
+                  onChange={() => handleNotificationToggle("enableCheckIns")}
+                  className="sr-only peer"
+                />
+                <div className="w-9 h-5 bg-[#5B7785]/20 rounded-full peer-checked:bg-[#C29762] transition-colors"></div>
+                <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full transition-transform peer-checked:translate-x-4"></div>
+              </div>
+            </label>
+          </div>
+        </div>
       </div>
 
-      <div>
-        <label className="block text-xs font-medium text-[#b8b1a6] mb-2 uppercase tracking-widest">day end time</label>
-        <input
-          type="time"
-          value={user.dayEnd}
-          onChange={(e) => handleChange("dayEnd", e.target.value)}
-          className="w-full px-4 py-2 text-sm border border-[#e8ddf5] rounded-2xl bg-[#faf9f7] text-[#3d3d3d] focus:outline-none focus:ring-2 focus:ring-[#d9cfc4] focus:bg-white transition-all"
-        />
-      </div>
-
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-2 mt-2">
         <button
           onClick={handleResetAll}
-          className="w-full px-4 py-2 text-xs font-medium text-[#7a403f] bg-[#fff6f6] rounded-2xl hover:bg-[#fff0f0] transition-colors duration-150"
+          className="w-full px-4 py-2.5 text-xs font-medium text-[#5B7785] bg-[#5B7785]/5 border border-[#5B7785]/20 rounded-xl hover:bg-[#5B7785]/10 active:scale-[0.98] transition-all"
         >
-          reset all data
+          start fresh
         </button>
 
-        <p className="text-xs text-[#b8b1a6] mt-2 text-center">settings saved automatically</p>
+        <p className="text-xs text-[#5B7785]/60 text-center">everything saves as you go</p>
       </div>
     </div>
   )

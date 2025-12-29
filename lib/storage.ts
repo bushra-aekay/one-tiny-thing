@@ -1,13 +1,30 @@
 export type DayEntry = { task: string; startedAt: number; shipped: boolean }
+export type NotificationPrefs = {
+  enableReminders: boolean
+  enableCheckIns: boolean
+}
 export type StorageData = {
-  user: { name: string; dayStart: string; dayEnd: string }
+  user: {
+    name: string
+    dayStart: string
+    dayEnd: string
+    notifications: NotificationPrefs
+  }
   days: Record<string, DayEntry>
 }
 
 const STORAGE_KEY = "one-thing-data"
 
 const defaultData = (): StorageData => ({
-  user: { name: "", dayStart: "09:00", dayEnd: "17:00" },
+  user: {
+    name: "",
+    dayStart: "09:00",
+    dayEnd: "17:00",
+    notifications: {
+      enableReminders: true,
+      enableCheckIns: true
+    }
+  },
   days: {},
 })
 
@@ -18,6 +35,15 @@ function safeParse(json: string | null): StorageData {
     // Basic validation
     if (!parsed || typeof parsed !== "object") return defaultData()
     if (!parsed.user || !parsed.days) return defaultData()
+
+    // Backward compatibility: add notifications if missing
+    if (!parsed.user.notifications) {
+      parsed.user.notifications = {
+        enableReminders: true,
+        enableCheckIns: true
+      }
+    }
+
     return parsed as StorageData
   } catch (e) {
     // Corrupt storage: return defaults
