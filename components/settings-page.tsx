@@ -33,49 +33,56 @@ export default function SettingsPage() {
   if (!mounted) return null
 
   return (
-    <div className="flex flex-col gap-4">
-      <div>
-        <label className="block text-xs font-medium text-[#8f867d] mb-2 uppercase tracking-widest">name</label>
-        <input
-          type="text"
-          value={user.name}
-          onChange={(e) => handleChange("name", e.target.value)}
-          placeholder="your name"
-          className="w-full px-4 py-2 text-sm bg-[#f6f4f2] rounded-2xl text-[#3d3d3d] focus:outline-none transition-colors"
-        />
+    <div className="flex flex-col gap-6">
+      <div className="text-center space-y-1">
+        <h2 className="text-xl font-normal text-gray-900">settings</h2>
+        <p className="text-sm text-gray-500">customize your experience</p>
       </div>
 
-      <div>
-        <label className="block text-xs font-medium text-[#b8b1a6] mb-2 uppercase tracking-widest">
-          day start time
-        </label>
-        <input
-          type="time"
-          value={user.dayStart}
-          onChange={(e) => handleChange("dayStart", e.target.value)}
-          className="w-full px-4 py-2 text-sm bg-[#f6f4f2] rounded-2xl text-[#3d3d3d] focus:outline-none transition-colors"
-        />
+      <div className="space-y-5">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">name</label>
+          <input
+            type="text"
+            value={user.name}
+            onChange={(e) => handleChange("name", e.target.value)}
+            placeholder="your name"
+            className="w-full px-4 py-2.5 text-base bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            day start time
+          </label>
+          <input
+            type="time"
+            value={user.dayStart}
+            onChange={(e) => handleChange("dayStart", e.target.value)}
+            className="w-full px-4 py-2.5 text-base bg-gray-50 border border-gray-200 rounded-lg text-gray-900 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">day end time</label>
+          <input
+            type="time"
+            value={user.dayEnd}
+            onChange={(e) => handleChange("dayEnd", e.target.value)}
+            className="w-full px-4 py-2.5 text-base bg-gray-50 border border-gray-200 rounded-lg text-gray-900 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all"
+          />
+        </div>
       </div>
 
-      <div>
-        <label className="block text-xs font-medium text-[#b8b1a6] mb-2 uppercase tracking-widest">day end time</label>
-        <input
-          type="time"
-          value={user.dayEnd}
-          onChange={(e) => handleChange("dayEnd", e.target.value)}
-          className="w-full px-4 py-2 text-sm border border-[#e8ddf5] rounded-2xl bg-[#faf9f7] text-[#3d3d3d] focus:outline-none focus:ring-2 focus:ring-[#d9cfc4] focus:bg-white transition-all"
-        />
-      </div>
-
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-3 mt-2">
         <button
           onClick={handleResetAll}
-          className="w-full px-4 py-2 text-xs font-medium text-[#7a403f] bg-[#fff6f6] rounded-2xl hover:bg-[#fff0f0] transition-colors duration-150"
+          className="w-full px-4 py-2.5 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 transition-colors duration-150"
         >
           reset all data
         </button>
 
-        <p className="text-xs text-[#b8b1a6] mt-2 text-center">settings saved automatically</p>
+        <p className="text-xs text-gray-500 text-center">changes save automatically</p>
       </div>
     </div>
   )

@@ -34,11 +34,14 @@ export default function GraphPage() {
   if (!mounted) return null
 
   return (
-    <div className="flex flex-col gap-4">
-      <h2 className="text-sm font-light text-[#3d3d3d] text-center">last 42 days</h2>
+    <div className="flex flex-col gap-6">
+      <div className="text-center space-y-1">
+        <h2 className="text-xl font-normal text-gray-900">your progress</h2>
+        <p className="text-sm text-gray-500">last 42 days</p>
+      </div>
 
-      <div className="p-4 bg-[#fbf8f5] rounded-2xl shadow-sm">
-        <div className="grid grid-cols-7 gap-2">
+      <div className="p-5 bg-gray-50 rounded-xl border border-gray-200">
+        <div className="grid grid-cols-7 gap-2.5">
           {days.map((state, index) => {
             const today = new Date()
             const offset = 41 - index
@@ -48,25 +51,38 @@ export default function GraphPage() {
 
             const classes =
               state === "shipped"
-                ? "bg-[#d9cfc4]"
+                ? "bg-green-400 ring-2 ring-green-200"
                 : state === "not-shipped"
-                ? "bg-[#f7dcd9] ring-1 ring-[#efe6e4]"
-                : "bg-[#f3f2ef]"
+                ? "bg-red-300 ring-2 ring-red-100"
+                : "bg-gray-200"
 
-            const title = state === "shipped" ? "shipped" : state === "not-shipped" ? "not shipped" : "no entry"
+            const title = state === "shipped" ? "shipped" : state === "not-shipped" ? "skipped" : "no entry"
 
             return (
               <div
                 key={index}
                 title={`${dateStr} — ${title}`}
                 aria-label={`${dateStr} ${title}`}
-                className={`w-8 h-8 rounded-full flex items-center justify-center ${classes}`}
+                className={`w-9 h-9 rounded-md flex items-center justify-center transition-all ${classes}`}
               />
             )
           })}
         </div>
 
-        <p className="text-xs text-[#8f867d] text-center mt-2">legend: shipped • not shipped • no entry</p>
+        <div className="flex items-center justify-center gap-4 mt-5 text-xs text-gray-600">
+          <div className="flex items-center gap-1.5">
+            <div className="w-3 h-3 rounded-sm bg-green-400"></div>
+            <span>shipped</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div className="w-3 h-3 rounded-sm bg-red-300"></div>
+            <span>skipped</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div className="w-3 h-3 rounded-sm bg-gray-200"></div>
+            <span>no entry</span>
+          </div>
+        </div>
       </div>
     </div>
   )

@@ -60,61 +60,67 @@ export default function HomePage() {
 
   if (!taskData) {
     return (
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-8">
         {getData().user.name && (
-          <p className="text-xs text-[#8f867d] mb-3 text-center">hi, {getData().user.name}</p>
+          <p className="text-sm text-gray-500 text-center font-light">hey {getData().user.name} 👋</p>
         )}
 
-        <h1 className="text-center text-base font-light tracking-wider text-[#3d3d3d] leading-relaxed">
-          what's one thing you want to ship today?
-        </h1>
+        <div className="text-center space-y-2">
+          <h1 className="text-2xl font-normal text-gray-900 leading-tight">
+            one tiny thing
+          </h1>
+          <p className="text-sm text-gray-500 leading-relaxed">
+            what's the <span className="font-medium text-gray-700">smallest</span> thing you can ship today?
+          </p>
+        </div>
 
         <input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyPress={handleKeyPress}
-          placeholder="type here..."
-          className="w-full px-4 py-3 text-sm bg-[#f6f4f2] rounded-2xl text-[#3d3d3d] placeholder-[#b8b1a6] focus:outline-none transition-colors"
+          placeholder="something small & achievable..."
+          className="w-full px-4 py-3 text-base bg-gray-50 border border-gray-200 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all"
         />
 
         <button
           onClick={handleStart}
-          className="w-full px-4 py-3 text-sm font-medium text-[#3d3d3d] bg-[#efe9df] rounded-2xl hover:bg-[#eadfcf] transition-colors duration-150"
+          className="w-full px-4 py-3 text-base font-medium text-white bg-blue-500 rounded-lg hover:bg-blue-600 active:bg-blue-700 transition-colors duration-150 shadow-sm"
         >
-          start
+          let's do this
         </button>
       </div>
     )
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <div>
-        <p className="text-xs text-[#8f867d] mb-2 uppercase tracking-widest">today</p>
-        <p className="text-sm text-[#3d3d3d] font-medium wrap-break-word">{taskData.task}</p>
+    <div className="flex flex-col gap-8">
+      <div className="space-y-3">
+        <p className="text-xs text-gray-400 uppercase tracking-wider font-medium">today's tiny thing</p>
+        <p className="text-lg text-gray-900 font-normal leading-relaxed break-words">{taskData.task}</p>
       </div>
 
       {!taskData.shipped && (
         <button
           onClick={handleShipped}
-          className="w-full px-4 py-3 text-sm font-medium text-[#2f6b45] bg-[#eaf6ef] rounded-2xl hover:bg-[#e2efe5] transition-colors duration-150"
+          className="w-full px-4 py-3 text-base font-medium text-white bg-green-500 rounded-lg hover:bg-green-600 active:bg-green-700 transition-colors duration-150 shadow-sm"
         >
-          mark as shipped
+          ✓ mark as shipped
         </button>
       )}
 
       {taskData.shipped && (
-        <div className="text-center py-3 bg-[#f5f3ef] rounded-2xl">
-          <p className="text-sm text-[#6b665f] font-medium">nice. shipped.</p>
+        <div className="text-center py-4 bg-green-50 border border-green-200 rounded-lg">
+          <p className="text-base text-green-700 font-medium">🎉 shipped!</p>
+          <p className="text-sm text-green-600 mt-1">great work today</p>
         </div>
       )}
 
       <button
         onClick={handleNotToday}
-        className="w-full px-4 py-2 text-xs font-medium text-[#6b665f] bg-transparent rounded-2xl ring-1 ring-transparent hover:ring-[#e8e3db] transition-colors duration-150"
+        className="w-full px-4 py-2 text-sm font-normal text-gray-500 bg-transparent border border-gray-200 rounded-lg hover:bg-gray-50 hover:text-gray-600 transition-colors duration-150"
       >
-        it's okay if not
+        skip today
       </button>
     </div>
   )
