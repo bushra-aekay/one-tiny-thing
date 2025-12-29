@@ -88,11 +88,11 @@ img-src 'self' data: blob:;
 
 ### 6. Security Headers
 
-All responses include:
-- `Content-Security-Policy`: Strict CSP
+All responses include (set via Electron's webRequest.onHeadersReceived):
+- `Content-Security-Policy`: Strict CSP (relaxed in dev for hot reload)
 - `X-Content-Type-Options: nosniff`: MIME sniffing prevention
-- `X-Frame-Options: DENY`: Clickjacking prevention
-- `X-XSS-Protection: 1; mode=block`: XSS protection
+
+Note: Headers are set in electron/main.js, not next.config.js, because static export doesn't support runtime headers
 
 ### 7. Download Protection
 
