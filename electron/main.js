@@ -87,7 +87,7 @@ const createWindow = () => {
       enableRemoteModule: false,
       preload: path.join(__dirname, 'preload.js')
     },
-    icon: path.join(__dirname, "../public/icon.png"),
+    icon: path.join(__dirname, "../public/icon.ico"),
     backgroundColor: '#00000000',
     title: '🌱 one tiny thing',
   })
