@@ -123,7 +123,7 @@ export default function HomePage() {
       <div className="flex flex-col gap-4 text-center">
         <div className="space-y-1">
           <h1 className="text-lg font-medium text-[#C29762]">
-            you already shipped today <3
+            you already shipped today {"<3"}
           </h1>
           <p className="text-sm text-[#5B7785]">
             nice work, {userName}! come back tomorrow~
@@ -181,7 +181,7 @@ export default function HomePage() {
             got it!
           </h1>
           <p className="text-sm text-[#5B7785]">
-            i'll check in later to see how it went <3
+            i'll check in later to see how it went {"<3"}
           </p>
         </div>
         <div className="w-full p-4 bg-[#ECE1E9]/50 border border-[#5B7785]/20 rounded-xl">
