@@ -1,0 +1,18 @@
+ICON FILE INFO:
+
+For proper Windows taskbar icon display, you'll need a .ico file.
+The emoji icon won't show correctly on Windows with just PNG.
+
+Quick fix options:
+1. Use an online converter: convertio.co/png-ico
+   - Upload public/icon.svg 
+   - Convert to .ico with multiple sizes (16, 32, 48, 256)
+   
+2. Or use this tool: icoconvert.com
+   - Upload the icon
+   - Generate .ico file
+   
+3. Then update electron/main.js line 90:
+   icon: path.join(__dirname, "../public/icon.ico"),
+
+The emoji will still show in the window title, but taskbar needs .ico format.

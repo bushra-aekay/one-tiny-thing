@@ -77,7 +77,7 @@ function createTray() {
 const createWindow = () => {
   mainWindow = new BrowserWindow({
     width: 440,
-    height: 580,
+    height: 480,
     frame: false,
     transparent: true,
     resizable: false,

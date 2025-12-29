@@ -24,10 +24,10 @@ export default function Page() {
   }
 
   return (
-    <div className="w-full h-screen flex items-center justify-center bg-[#ECE1E9]/40 p-4 overflow-hidden">
-      <div className="w-full max-w-md bg-white/95 rounded-2xl shadow-xl overflow-hidden flex flex-col relative" style={{ height: '520px' }}>
+    <div className="w-full h-screen flex items-center justify-center overflow-hidden">
+      <div className="w-full max-w-md bg-white/95 rounded-2xl shadow-xl overflow-hidden flex flex-col relative" style={{ height: '420px' }}>
         <WindowControls />
-        <div className="flex-1 overflow-y-auto px-6 pt-12 pb-4 scrollbar-hide">
+        <div className="flex-1 overflow-y-auto px-6 pt-10 pb-3 scrollbar-hide">
           {currentPage === "home" && <HomePage />}
           {currentPage === "graph" && <GraphPage />}
           {currentPage === "settings" && <SettingsPage />}
