@@ -120,7 +120,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-[#ECE1E9]/40 text-[#2E6467];
+    @apply bg-transparent text-[#2E6467];
   }
 }
 
@@ -131,6 +131,25 @@
   }
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
+  }
+
+  /* Cute custom scrollbar */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #ECE1E9;
+    border-radius: 10px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #C29762;
+    border-radius: 10px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #5B7785;
   }
 
   /* Hide ugly time input spinners */

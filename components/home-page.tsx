@@ -95,7 +95,7 @@ export default function HomePage() {
   // Step 1: Ask for username if not set
   if (!userName) {
     return (
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-3 w-full">
         <div className="text-center space-y-1">
           <h1 className="text-lg font-medium text-[#2E6467]">
             hi there! so glad you're here :)
@@ -151,7 +151,7 @@ export default function HomePage() {
   // Step 2: If already shipped today
   if (taskData?.shipped) {
     return (
-      <div className="flex flex-col gap-4 text-center">
+      <div className="flex flex-col gap-4 text-center w-full">
         <div className="space-y-1">
           <h1 className="text-lg font-medium text-[#C29762]">
             you did it! you really did it {"<3"}
@@ -171,7 +171,7 @@ export default function HomePage() {
   // Step 3: Show check-in if task exists and user is returning
   if (showCheckIn && taskData) {
     return (
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 w-full">
         <div className="text-center space-y-1">
           <h1 className="text-lg font-medium text-[#2E6467]">
             welcome back, {userName}!
@@ -207,7 +207,7 @@ export default function HomePage() {
   // Step 4: Show confirmation after setting task
   if (showConfirmation && taskData) {
     return (
-      <div className="flex flex-col gap-4 text-center">
+      <div className="flex flex-col gap-4 text-center w-full">
         <div className="space-y-1">
           <h1 className="text-lg font-medium text-[#2E6467]">
             okay, I'm rooting for you!
@@ -227,7 +227,7 @@ export default function HomePage() {
   // Step 5: If task already set for today, offer to change it
   if (taskData && !showConfirmation) {
     return (
-      <div className="flex flex-col gap-4 text-center">
+      <div className="flex flex-col gap-4 text-center w-full">
         <div className="space-y-1">
           <h1 className="text-lg font-medium text-[#2E6467]">
             oh, you picked something earlier
@@ -262,7 +262,7 @@ export default function HomePage() {
 
   // Step 6: Fresh task entry
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 w-full">
       <div className="text-center space-y-1">
         <h1 className="text-lg font-medium text-[#2E6467]">
           hi {userName}! ready for today?

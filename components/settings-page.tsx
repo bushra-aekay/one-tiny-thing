@@ -57,7 +57,7 @@ export default function SettingsPage() {
   if (!mounted) return null
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 w-full">
       <div className="text-center space-y-1">
         <h2 className="text-lg font-medium text-[#2E6467]">settings</h2>
         <p className="text-xs text-[#5B7785]">make this yours</p>
