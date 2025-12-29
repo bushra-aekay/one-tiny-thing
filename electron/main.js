@@ -17,7 +17,7 @@ const createWindow = () => {
       enableRemoteModule: false,
       preload: path.join(__dirname, 'preload.js')
     },
-    icon: path.join(__dirname, "../public/icon.png"),
+    icon: path.join(__dirname, "../public/icon.svg"),
     backgroundColor: '#00000000',
   })
 

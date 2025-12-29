@@ -36,24 +36,24 @@ export default function SettingsPage() {
     <div className="flex flex-col gap-4">
       <div className="text-center space-y-1">
         <h2 className="text-lg font-medium text-[#2E6467]">settings</h2>
-        <p className="text-xs text-[#5B7785]">customize your experience</p>
+        <p className="text-xs text-[#5B7785]">make this yours</p>
       </div>
 
       <div className="space-y-4">
         <div>
-          <label className="block text-xs font-medium text-[#5B7785] mb-1.5">name</label>
+          <label className="block text-xs font-medium text-[#5B7785] mb-1.5">what should I call you?</label>
           <input
             type="text"
             value={user.name}
             onChange={(e) => handleChange("name", e.target.value)}
-            placeholder="your name"
+            placeholder="whatever feels right..."
             className="w-full px-4 py-2.5 text-sm bg-[#ECE1E9]/30 border border-[#5B7785]/20 rounded-xl text-[#2E6467] placeholder-[#5B7785]/40 focus:outline-none focus:border-[#5B7785]/40 focus:ring-2 focus:ring-[#5B7785]/10 transition-all"
           />
         </div>
 
         <div>
           <label className="block text-xs font-medium text-[#5B7785] mb-1.5">
-            day start time
+            when does your day begin?
           </label>
           <input
             type="time"
@@ -64,7 +64,7 @@ export default function SettingsPage() {
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-[#5B7785] mb-1.5">day end time</label>
+          <label className="block text-xs font-medium text-[#5B7785] mb-1.5">and when does it wind down?</label>
           <input
             type="time"
             value={user.dayEnd}
@@ -79,10 +79,10 @@ export default function SettingsPage() {
           onClick={handleResetAll}
           className="w-full px-4 py-2.5 text-xs font-medium text-[#5B7785] bg-[#5B7785]/5 border border-[#5B7785]/20 rounded-xl hover:bg-[#5B7785]/10 active:scale-[0.98] transition-all"
         >
-          reset all data
+          start fresh
         </button>
 
-        <p className="text-xs text-[#5B7785]/60 text-center">saves automatically</p>
+        <p className="text-xs text-[#5B7785]/60 text-center">everything saves as you go</p>
       </div>
     </div>
   )

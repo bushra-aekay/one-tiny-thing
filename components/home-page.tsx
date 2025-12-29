@@ -98,28 +98,28 @@ export default function HomePage() {
       <div className="flex flex-col gap-3">
         <div className="text-center space-y-1">
           <h1 className="text-lg font-medium text-[#2E6467]">
-            hey there :)
+            hi there! so glad you're here :)
           </h1>
           <p className="text-xs text-[#5B7785]">
-            let's get you set up
+            let's get to know each other a bit
           </p>
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-[#5B7785] mb-1">name</label>
+          <label className="block text-xs font-medium text-[#5B7785] mb-1">what should I call you?</label>
           <input
             type="text"
             value={nameInput}
             onChange={(e) => setNameInput(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="your name..."
+            placeholder="whatever feels right..."
             className="w-full px-3 py-2 text-sm bg-[#ECE1E9]/30 border border-[#5B7785]/20 rounded-lg text-[#2E6467] placeholder-[#5B7785]/40 focus:outline-none focus:border-[#5B7785]/40 focus:ring-2 focus:ring-[#5B7785]/10 transition-all"
           />
         </div>
 
         <div className="grid grid-cols-2 gap-2">
           <div>
-            <label className="block text-xs font-medium text-[#5B7785] mb-1">day start</label>
+            <label className="block text-xs font-medium text-[#5B7785] mb-1">when does your day begin?</label>
             <input
               type="time"
               value={dayStartInput}
@@ -128,7 +128,7 @@ export default function HomePage() {
             />
           </div>
           <div>
-            <label className="block text-xs font-medium text-[#5B7785] mb-1">day end</label>
+            <label className="block text-xs font-medium text-[#5B7785] mb-1">and when does it wind down?</label>
             <input
               type="time"
               value={dayEndInput}
@@ -142,7 +142,7 @@ export default function HomePage() {
           onClick={handleSetName}
           className="w-full px-4 py-2.5 text-sm font-medium text-white bg-[#5B7785] rounded-xl hover:bg-[#2E6467] active:scale-[0.98] transition-all mt-2"
         >
-          continue
+          let's start
         </button>
       </div>
     )
@@ -154,14 +154,14 @@ export default function HomePage() {
       <div className="flex flex-col gap-4 text-center">
         <div className="space-y-1">
           <h1 className="text-lg font-medium text-[#C29762]">
-            you already shipped today {"<3"}
+            you did it! you really did it {"<3"}
           </h1>
           <p className="text-sm text-[#5B7785]">
-            nice work, {userName}! come back tomorrow~
+            I'm so proud of you, {userName}. see you tomorrow :)
           </p>
         </div>
         <div className="w-full p-4 bg-[#C29762]/10 border border-[#C29762]/20 rounded-xl">
-          <p className="text-xs text-[#C29762]/70 font-medium mb-1">today's win:</p>
+          <p className="text-xs text-[#C29762]/70 font-medium mb-1">what you accomplished:</p>
           <p className="text-sm text-[#2E6467]">{taskData.task}</p>
         </div>
       </div>
@@ -174,15 +174,15 @@ export default function HomePage() {
       <div className="flex flex-col gap-4">
         <div className="text-center space-y-1">
           <h1 className="text-lg font-medium text-[#2E6467]">
-            hey {userName}!
+            welcome back, {userName}!
           </h1>
           <p className="text-sm text-[#5B7785]">
-            did you finish your tiny thing?
+            how'd it go with your tiny thing?
           </p>
         </div>
 
         <div className="w-full p-4 bg-[#ECE1E9]/50 border border-[#5B7785]/20 rounded-xl">
-          <p className="text-xs text-[#5B7785]/70 font-medium mb-1">today's task:</p>
+          <p className="text-xs text-[#5B7785]/70 font-medium mb-1">what you wanted to do:</p>
           <p className="text-sm text-[#2E6467]">{taskData.task}</p>
         </div>
 
@@ -191,13 +191,13 @@ export default function HomePage() {
             onClick={handleShipped}
             className="flex-1 px-4 py-2.5 text-sm font-medium text-white bg-[#C29762] rounded-xl hover:bg-[#C29762]/90 active:scale-[0.98] transition-all"
           >
-            shipped :)
+            yes, I did it!
           </button>
           <button
             onClick={handleNotYet}
             className="flex-1 px-4 py-2.5 text-sm font-medium text-[#5B7785] bg-[#ECE1E9]/30 rounded-xl hover:bg-[#ECE1E9]/50 transition-all"
           >
-            not yet
+            still working on it
           </button>
         </div>
       </div>
@@ -210,14 +210,14 @@ export default function HomePage() {
       <div className="flex flex-col gap-4 text-center">
         <div className="space-y-1">
           <h1 className="text-lg font-medium text-[#2E6467]">
-            got it!
+            okay, I'm rooting for you!
           </h1>
           <p className="text-sm text-[#5B7785]">
-            i'll check in later to see how it went {"<3"}
+            I'll be here when you're done {"<3"}
           </p>
         </div>
         <div className="w-full p-4 bg-[#ECE1E9]/50 border border-[#5B7785]/20 rounded-xl">
-          <p className="text-xs text-[#5B7785]/70 font-medium mb-1">your tiny thing:</p>
+          <p className="text-xs text-[#5B7785]/70 font-medium mb-1">what you're working on:</p>
           <p className="text-sm text-[#2E6467]">{taskData.task}</p>
         </div>
       </div>
@@ -230,15 +230,15 @@ export default function HomePage() {
       <div className="flex flex-col gap-4 text-center">
         <div className="space-y-1">
           <h1 className="text-lg font-medium text-[#2E6467]">
-            you already have a task
+            oh, you picked something earlier
           </h1>
           <p className="text-sm text-[#5B7785]">
-            wanna change it?
+            want to choose something different?
           </p>
         </div>
 
         <div className="w-full p-4 bg-[#ECE1E9]/50 border border-[#5B7785]/20 rounded-xl">
-          <p className="text-xs text-[#5B7785]/70 font-medium mb-1">current task:</p>
+          <p className="text-xs text-[#5B7785]/70 font-medium mb-1">what you chose:</p>
           <p className="text-sm text-[#2E6467]">{taskData.task}</p>
         </div>
 
@@ -247,13 +247,13 @@ export default function HomePage() {
             onClick={handleChangeTask}
             className="flex-1 px-4 py-2.5 text-sm font-medium text-white bg-[#5B7785] rounded-xl hover:bg-[#2E6467] active:scale-[0.98] transition-all"
           >
-            change it
+            pick something else
           </button>
           <button
             onClick={() => setShowCheckIn(true)}
             className="flex-1 px-4 py-2.5 text-sm font-medium text-[#5B7785] bg-[#ECE1E9]/30 rounded-xl hover:bg-[#ECE1E9]/50 transition-all"
           >
-            keep it
+            this is perfect
           </button>
         </div>
       </div>
@@ -265,10 +265,10 @@ export default function HomePage() {
     <div className="flex flex-col gap-4">
       <div className="text-center space-y-1">
         <h1 className="text-lg font-medium text-[#2E6467]">
-          hey {userName} :)
+          hi {userName}! ready for today?
         </h1>
         <p className="text-sm text-[#5B7785]">
-          what's the <span className="font-semibold text-[#2E6467]">tiniest</span> thing you can ship today?
+          what's one <span className="font-semibold text-[#2E6467]">tiny</span> thing you could finish today?
         </p>
       </div>
 
@@ -277,7 +277,7 @@ export default function HomePage() {
         value={input}
         onChange={(e) => setInput(e.target.value)}
         onKeyPress={handleKeyPress}
-        placeholder="something super small..."
+        placeholder="think really small..."
         className="w-full px-4 py-2.5 text-sm bg-[#ECE1E9]/30 border border-[#5B7785]/20 rounded-xl text-[#2E6467] placeholder-[#5B7785]/40 focus:outline-none focus:border-[#5B7785]/40 focus:ring-2 focus:ring-[#5B7785]/10 transition-all"
       />
 
@@ -285,7 +285,7 @@ export default function HomePage() {
         onClick={handleStart}
         className="w-full px-4 py-2.5 text-sm font-medium text-white bg-[#C29762] rounded-xl hover:bg-[#C29762]/90 active:scale-[0.98] transition-all"
       >
-        let's do this
+        I can do this
       </button>
     </div>
   )

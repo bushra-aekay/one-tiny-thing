@@ -55,8 +55,8 @@ export default function GraphPage() {
   return (
     <div className="flex flex-col gap-4">
       <div className="text-center space-y-1">
-        <h2 className="text-lg font-medium text-[#2E6467]">your progress</h2>
-        <p className="text-xs text-[#5B7785]">tracking your tiny wins</p>
+        <h2 className="text-lg font-medium text-[#2E6467]">look how far you've come</h2>
+        <p className="text-xs text-[#5B7785]">every little thing counts</p>
       </div>
 
       {/* View mode toggle */}
