@@ -5,10 +5,14 @@ import type { StorageData } from "@/lib/storage"
 import { getData, updateUser, resetAllData } from "@/lib/storage"
 
 export default function SettingsPage() {
-  const [user, setUser] = useState({
+  const [user, setUser] = useState<StorageData['user']>({
     name: "",
     dayStart: "09:00",
     dayEnd: "17:00",
+    notifications: {
+      enableReminders: true,
+      enableCheckIns: true
+    }
   })
   const [mounted, setMounted] = useState(false)
 
@@ -18,15 +22,35 @@ export default function SettingsPage() {
     setUser(data.user)
   }, [])
 
-  const handleChange = (key: keyof typeof user, value: string) => {
+  const handleChange = (key: keyof StorageData['user'], value: any) => {
     const updated = { ...user, [key]: value }
+    setUser(updated)
+    updateUser(updated)
+  }
+
+  const handleNotificationToggle = (key: keyof StorageData['user']['notifications']) => {
+    const updated = {
+      ...user,
+      notifications: {
+        ...user.notifications,
+        [key]: !user.notifications[key]
+      }
+    }
     setUser(updated)
     updateUser(updated)
   }
 
   const handleResetAll = () => {
     resetAllData()
-    const defaults: StorageData['user'] = { name: "", dayStart: "09:00", dayEnd: "17:00" }
+    const defaults: StorageData['user'] = {
+      name: "",
+      dayStart: "09:00",
+      dayEnd: "17:00",
+      notifications: {
+        enableReminders: true,
+        enableCheckIns: true
+      }
+    }
     setUser(defaults)
   }
 
@@ -71,6 +95,39 @@ export default function SettingsPage() {
             onChange={(e) => handleChange("dayEnd", e.target.value)}
             className="w-full px-4 py-2.5 text-sm bg-[#ECE1E9]/30 border border-[#5B7785]/20 rounded-xl text-[#2E6467] focus:outline-none focus:border-[#5B7785]/40 focus:ring-2 focus:ring-[#5B7785]/10 transition-all"
           />
+        </div>
+
+        <div className="pt-2 border-t border-[#5B7785]/10">
+          <p className="text-xs font-medium text-[#5B7785] mb-3">gentle reminders</p>
+          <div className="space-y-3">
+            <label className="flex items-center justify-between cursor-pointer">
+              <span className="text-xs text-[#2E6467]">nudge me during the day</span>
+              <div className="relative">
+                <input
+                  type="checkbox"
+                  checked={user.notifications.enableReminders}
+                  onChange={() => handleNotificationToggle("enableReminders")}
+                  className="sr-only peer"
+                />
+                <div className="w-9 h-5 bg-[#5B7785]/20 rounded-full peer-checked:bg-[#C29762] transition-colors"></div>
+                <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full transition-transform peer-checked:translate-x-4"></div>
+              </div>
+            </label>
+
+            <label className="flex items-center justify-between cursor-pointer">
+              <span className="text-xs text-[#2E6467]">check in if I go quiet</span>
+              <div className="relative">
+                <input
+                  type="checkbox"
+                  checked={user.notifications.enableCheckIns}
+                  onChange={() => handleNotificationToggle("enableCheckIns")}
+                  className="sr-only peer"
+                />
+                <div className="w-9 h-5 bg-[#5B7785]/20 rounded-full peer-checked:bg-[#C29762] transition-colors"></div>
+                <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full transition-transform peer-checked:translate-x-4"></div>
+              </div>
+            </label>
+          </div>
         </div>
       </div>
 
