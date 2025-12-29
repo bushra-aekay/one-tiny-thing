@@ -88,13 +88,12 @@ export default function HomePage() {
   // Step 1: Ask for username if not set
   if (!userName) {
     return (
-      <div className="flex flex-col gap-6 items-center">
-        <div className="text-center space-y-2">
-          <div className="text-5xl mb-3">✨</div>
-          <h1 className="text-2xl font-semibold text-purple-900 leading-tight">
-            hey there!
+      <div className="flex flex-col gap-4 items-center">
+        <div className="text-center space-y-1">
+          <h1 className="text-xl font-medium text-[#2E6467]">
+            hey there :)
           </h1>
-          <p className="text-base text-purple-700 leading-relaxed">
+          <p className="text-sm text-[#5B7785]">
             what should we call you?
           </p>
         </div>
@@ -105,14 +104,14 @@ export default function HomePage() {
           onChange={(e) => setNameInput(e.target.value)}
           onKeyPress={handleKeyPress}
           placeholder="your name..."
-          className="w-full px-5 py-3.5 text-base bg-white/70 border-2 border-purple-200 rounded-2xl text-purple-900 placeholder-purple-300 focus:outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-100 transition-all"
+          className="w-full px-4 py-2.5 text-sm bg-[#ECE1E9]/30 border border-[#5B7785]/20 rounded-xl text-[#2E6467] placeholder-[#5B7785]/40 focus:outline-none focus:border-[#5B7785]/40 focus:ring-2 focus:ring-[#5B7785]/10 transition-all"
         />
 
         <button
           onClick={handleSetName}
-          className="w-full px-5 py-3.5 text-base font-semibold text-white bg-gradient-to-r from-purple-400 to-purple-500 rounded-2xl hover:from-purple-500 hover:to-purple-600 active:scale-95 transition-all shadow-lg shadow-purple-200"
+          className="w-full px-4 py-2.5 text-sm font-medium text-white bg-[#5B7785] rounded-xl hover:bg-[#2E6467] active:scale-[0.98] transition-all"
         >
-          let's goooo 🚀
+          continue
         </button>
       </div>
     )
@@ -121,19 +120,18 @@ export default function HomePage() {
   // Step 2: If already shipped today
   if (taskData?.shipped) {
     return (
-      <div className="flex flex-col gap-6 items-center text-center">
-        <div className="text-6xl mb-3">🎉</div>
-        <div className="space-y-2">
-          <h1 className="text-2xl font-semibold text-emerald-900 leading-tight">
-            you already shipped today!
+      <div className="flex flex-col gap-4 text-center">
+        <div className="space-y-1">
+          <h1 className="text-lg font-medium text-[#C29762]">
+            you already shipped today <3
           </h1>
-          <p className="text-base text-emerald-700 leading-relaxed">
-            amazing work, {userName}! come back tomorrow for another tiny win ✨
+          <p className="text-sm text-[#5B7785]">
+            nice work, {userName}! come back tomorrow~
           </p>
         </div>
-        <div className="w-full p-5 bg-emerald-50 border-2 border-emerald-200 rounded-2xl">
-          <p className="text-sm text-emerald-600 font-medium mb-2">today's achievement:</p>
-          <p className="text-base text-emerald-900">{taskData.task}</p>
+        <div className="w-full p-4 bg-[#C29762]/10 border border-[#C29762]/20 rounded-xl">
+          <p className="text-xs text-[#C29762]/70 font-medium mb-1">today's win:</p>
+          <p className="text-sm text-[#2E6467]">{taskData.task}</p>
         </div>
       </div>
     )
@@ -142,32 +140,31 @@ export default function HomePage() {
   // Step 3: Show check-in if task exists and user is returning
   if (showCheckIn && taskData) {
     return (
-      <div className="flex flex-col gap-6">
-        <div className="text-center space-y-2">
-          <div className="text-5xl mb-3">👀</div>
-          <h1 className="text-2xl font-semibold text-purple-900 leading-tight">
+      <div className="flex flex-col gap-4">
+        <div className="text-center space-y-1">
+          <h1 className="text-lg font-medium text-[#2E6467]">
             hey {userName}!
           </h1>
-          <p className="text-base text-purple-700 leading-relaxed">
+          <p className="text-sm text-[#5B7785]">
             did you finish your tiny thing?
           </p>
         </div>
 
-        <div className="w-full p-5 bg-purple-50 border-2 border-purple-200 rounded-2xl">
-          <p className="text-sm text-purple-600 font-medium mb-2">today's task:</p>
-          <p className="text-base text-purple-900">{taskData.task}</p>
+        <div className="w-full p-4 bg-[#ECE1E9]/50 border border-[#5B7785]/20 rounded-xl">
+          <p className="text-xs text-[#5B7785]/70 font-medium mb-1">today's task:</p>
+          <p className="text-sm text-[#2E6467]">{taskData.task}</p>
         </div>
 
         <button
           onClick={handleShipped}
-          className="w-full px-5 py-3.5 text-base font-semibold text-white bg-gradient-to-r from-emerald-400 to-emerald-500 rounded-2xl hover:from-emerald-500 hover:to-emerald-600 active:scale-95 transition-all shadow-lg shadow-emerald-200"
+          className="w-full px-4 py-2.5 text-sm font-medium text-white bg-[#C29762] rounded-xl hover:bg-[#C29762]/90 active:scale-[0.98] transition-all"
         >
-          yep, shipped it! ✓
+          yep, shipped it :)
         </button>
 
         <button
           onClick={handleNotYet}
-          className="w-full px-4 py-3 text-sm font-medium text-purple-600 bg-transparent border-2 border-purple-200 rounded-2xl hover:bg-purple-50 transition-all"
+          className="w-full px-4 py-2 text-xs font-medium text-[#5B7785] bg-transparent border border-[#5B7785]/20 rounded-xl hover:bg-[#ECE1E9]/30 transition-all"
         >
           not yet, still working on it
         </button>
@@ -178,19 +175,18 @@ export default function HomePage() {
   // Step 4: Show confirmation after setting task
   if (showConfirmation && taskData) {
     return (
-      <div className="flex flex-col gap-6 items-center text-center">
-        <div className="text-6xl mb-3">🌟</div>
-        <div className="space-y-2">
-          <h1 className="text-2xl font-semibold text-purple-900 leading-tight">
-            ok bet!
+      <div className="flex flex-col gap-4 text-center">
+        <div className="space-y-1">
+          <h1 className="text-lg font-medium text-[#2E6467]">
+            got it!
           </h1>
-          <p className="text-base text-purple-700 leading-relaxed">
-            i'll check in with you later to see how it went~ good luck! 💜
+          <p className="text-sm text-[#5B7785]">
+            i'll check in later to see how it went <3
           </p>
         </div>
-        <div className="w-full p-5 bg-purple-50 border-2 border-purple-200 rounded-2xl">
-          <p className="text-sm text-purple-600 font-medium mb-2">your tiny thing:</p>
-          <p className="text-base text-purple-900">{taskData.task}</p>
+        <div className="w-full p-4 bg-[#ECE1E9]/50 border border-[#5B7785]/20 rounded-xl">
+          <p className="text-xs text-[#5B7785]/70 font-medium mb-1">your tiny thing:</p>
+          <p className="text-sm text-[#2E6467]">{taskData.task}</p>
         </div>
       </div>
     )
@@ -199,32 +195,31 @@ export default function HomePage() {
   // Step 5: If task already set for today, offer to change it
   if (taskData && !showConfirmation) {
     return (
-      <div className="flex flex-col gap-6 text-center">
-        <div className="text-5xl mb-3">📝</div>
-        <div className="space-y-2">
-          <h1 className="text-2xl font-semibold text-purple-900 leading-tight">
-            you already have a task!
+      <div className="flex flex-col gap-4 text-center">
+        <div className="space-y-1">
+          <h1 className="text-lg font-medium text-[#2E6467]">
+            you already have a task
           </h1>
-          <p className="text-base text-purple-700 leading-relaxed">
+          <p className="text-sm text-[#5B7785]">
             wanna change it?
           </p>
         </div>
 
-        <div className="w-full p-5 bg-purple-50 border-2 border-purple-200 rounded-2xl">
-          <p className="text-sm text-purple-600 font-medium mb-2">current task:</p>
-          <p className="text-base text-purple-900">{taskData.task}</p>
+        <div className="w-full p-4 bg-[#ECE1E9]/50 border border-[#5B7785]/20 rounded-xl">
+          <p className="text-xs text-[#5B7785]/70 font-medium mb-1">current task:</p>
+          <p className="text-sm text-[#2E6467]">{taskData.task}</p>
         </div>
 
         <button
           onClick={handleChangeTask}
-          className="w-full px-5 py-3.5 text-base font-semibold text-white bg-gradient-to-r from-purple-400 to-purple-500 rounded-2xl hover:from-purple-500 hover:to-purple-600 active:scale-95 transition-all shadow-lg shadow-purple-200"
+          className="w-full px-4 py-2.5 text-sm font-medium text-white bg-[#5B7785] rounded-xl hover:bg-[#2E6467] active:scale-[0.98] transition-all"
         >
-          yeah, let me change it
+          yeah, change it
         </button>
 
         <button
           onClick={() => setShowCheckIn(true)}
-          className="w-full px-4 py-3 text-sm font-medium text-purple-600 bg-transparent border-2 border-purple-200 rounded-2xl hover:bg-purple-50 transition-all"
+          className="w-full px-4 py-2 text-xs font-medium text-[#5B7785] bg-transparent border border-[#5B7785]/20 rounded-xl hover:bg-[#ECE1E9]/30 transition-all"
         >
           nah, keep it
         </button>
@@ -234,14 +229,13 @@ export default function HomePage() {
 
   // Step 6: Fresh task entry
   return (
-    <div className="flex flex-col gap-6">
-      <div className="text-center space-y-2">
-        <div className="text-5xl mb-3">✨</div>
-        <h1 className="text-2xl font-semibold text-purple-900 leading-tight">
-          hey {userName}!
+    <div className="flex flex-col gap-4">
+      <div className="text-center space-y-1">
+        <h1 className="text-lg font-medium text-[#2E6467]">
+          hey {userName} :)
         </h1>
-        <p className="text-base text-purple-700 leading-relaxed">
-          what's the <span className="font-bold text-purple-900">tiniest</span> thing you can ship today?
+        <p className="text-sm text-[#5B7785]">
+          what's the <span className="font-semibold text-[#2E6467]">tiniest</span> thing you can ship today?
         </p>
       </div>
 
@@ -250,15 +244,15 @@ export default function HomePage() {
         value={input}
         onChange={(e) => setInput(e.target.value)}
         onKeyPress={handleKeyPress}
-        placeholder="something super small & doable..."
-        className="w-full px-5 py-3.5 text-base bg-white/70 border-2 border-purple-200 rounded-2xl text-purple-900 placeholder-purple-300 focus:outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-100 transition-all"
+        placeholder="something super small..."
+        className="w-full px-4 py-2.5 text-sm bg-[#ECE1E9]/30 border border-[#5B7785]/20 rounded-xl text-[#2E6467] placeholder-[#5B7785]/40 focus:outline-none focus:border-[#5B7785]/40 focus:ring-2 focus:ring-[#5B7785]/10 transition-all"
       />
 
       <button
         onClick={handleStart}
-        className="w-full px-5 py-3.5 text-base font-semibold text-white bg-gradient-to-r from-emerald-400 to-emerald-500 rounded-2xl hover:from-emerald-500 hover:to-emerald-600 active:scale-95 transition-all shadow-lg shadow-emerald-200"
+        className="w-full px-4 py-2.5 text-sm font-medium text-white bg-[#C29762] rounded-xl hover:bg-[#C29762]/90 active:scale-[0.98] transition-all"
       >
-        let's do this! 🔥
+        let's do this
       </button>
     </div>
   )

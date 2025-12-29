@@ -49,45 +49,44 @@ export default function GraphPage() {
   if (!mounted) return null
 
   const maxStreak = Math.max(...days.map(d => d.streak), 1)
-  const chartHeight = 200
+  const chartHeight = 160
   const chartWidth = days.length > 30 ? 350 : days.length > 7 ? 320 : 280
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="text-center space-y-2">
-        <div className="text-4xl mb-3">📊</div>
-        <h2 className="text-2xl font-semibold text-purple-900">your streak</h2>
-        <p className="text-sm text-purple-600">tracking your tiny wins</p>
+    <div className="flex flex-col gap-4">
+      <div className="text-center space-y-1">
+        <h2 className="text-lg font-medium text-[#2E6467]">your progress</h2>
+        <p className="text-xs text-[#5B7785]">tracking your tiny wins</p>
       </div>
 
       {/* View mode toggle */}
-      <div className="flex gap-2 bg-white/70 p-1.5 rounded-2xl border-2 border-purple-200">
+      <div className="flex gap-1.5 bg-[#ECE1E9]/40 p-1 rounded-xl border border-[#5B7785]/10">
         <button
           onClick={() => setViewMode("weekly")}
-          className={`flex-1 px-4 py-2 text-sm font-semibold rounded-xl transition-all ${
+          className={`flex-1 px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${
             viewMode === "weekly"
-              ? "bg-gradient-to-r from-purple-400 to-purple-500 text-white shadow-md"
-              : "text-purple-600 hover:bg-purple-50"
+              ? "bg-[#5B7785] text-white"
+              : "text-[#5B7785] hover:bg-[#ECE1E9]/50"
           }`}
         >
           week
         </button>
         <button
           onClick={() => setViewMode("monthly")}
-          className={`flex-1 px-4 py-2 text-sm font-semibold rounded-xl transition-all ${
+          className={`flex-1 px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${
             viewMode === "monthly"
-              ? "bg-gradient-to-r from-purple-400 to-purple-500 text-white shadow-md"
-              : "text-purple-600 hover:bg-purple-50"
+              ? "bg-[#5B7785] text-white"
+              : "text-[#5B7785] hover:bg-[#ECE1E9]/50"
           }`}
         >
           month
         </button>
         <button
           onClick={() => setViewMode("yearly")}
-          className={`flex-1 px-4 py-2 text-sm font-semibold rounded-xl transition-all ${
+          className={`flex-1 px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${
             viewMode === "yearly"
-              ? "bg-gradient-to-r from-purple-400 to-purple-500 text-white shadow-md"
-              : "text-purple-600 hover:bg-purple-50"
+              ? "bg-[#5B7785] text-white"
+              : "text-[#5B7785] hover:bg-[#ECE1E9]/50"
           }`}
         >
           year
@@ -95,11 +94,11 @@ export default function GraphPage() {
       </div>
 
       {/* Line graph */}
-      <div className="p-6 bg-white/70 rounded-2xl border-2 border-purple-200 shadow-lg shadow-purple-100 overflow-x-auto">
+      <div className="p-5 bg-[#ECE1E9]/30 rounded-xl border border-[#5B7785]/10 overflow-x-auto">
         <svg width={chartWidth} height={chartHeight} className="mx-auto">
           {/* Grid lines */}
-          {[0, 1, 2, 3, 4].map((i) => {
-            const y = chartHeight - (i * chartHeight / 4)
+          {[0, 1, 2, 3].map((i) => {
+            const y = chartHeight - (i * chartHeight / 3)
             return (
               <line
                 key={i}
@@ -107,9 +106,10 @@ export default function GraphPage() {
                 y1={y}
                 x2={chartWidth}
                 y2={y}
-                stroke="#E9D5FF"
-                strokeWidth="1"
-                strokeDasharray="4 4"
+                stroke="#5B7785"
+                strokeWidth="0.5"
+                strokeDasharray="2 2"
+                opacity="0.2"
               />
             )
           })}
@@ -118,47 +118,40 @@ export default function GraphPage() {
           <polyline
             points={days.map((day, i) => {
               const x = (i / (days.length - 1)) * (chartWidth - 20) + 10
-              const y = chartHeight - 30 - (day.streak / maxStreak) * (chartHeight - 60)
+              const y = chartHeight - 20 - (day.streak / maxStreak) * (chartHeight - 40)
               return `${x},${y}`
             }).join(" ")}
             fill="none"
-            stroke="url(#gradient)"
-            strokeWidth="3"
+            stroke="#5B7785"
+            strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
+            opacity="0.6"
           />
-
-          {/* Gradient definition */}
-          <defs>
-            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#A78BFA" />
-              <stop offset="100%" stopColor="#6EE7B7" />
-            </linearGradient>
-          </defs>
 
           {/* Data points */}
           {days.map((day, i) => {
             const x = (i / (days.length - 1)) * (chartWidth - 20) + 10
-            const y = chartHeight - 30 - (day.streak / maxStreak) * (chartHeight - 60)
+            const y = chartHeight - 20 - (day.streak / maxStreak) * (chartHeight - 40)
 
             return (
               <g key={i}>
                 <circle
                   cx={x}
                   cy={y}
-                  r={day.state === "shipped" ? 6 : day.state === "not-shipped" ? 4 : 3}
+                  r={day.state === "shipped" ? 5 : day.state === "not-shipped" ? 3 : 2}
                   fill={
                     day.state === "shipped"
-                      ? "#10B981"
+                      ? "#C29762"
                       : day.state === "not-shipped"
-                      ? "#C4B5FD"
-                      : "#E9D5FF"
+                      ? "#5B7785"
+                      : "#ECE1E9"
                   }
                   stroke="white"
-                  strokeWidth="2"
-                  className="drop-shadow-md"
+                  strokeWidth="1.5"
+                  opacity={day.state === "none" ? 0.3 : 1}
                 >
-                  <title>{`${day.date}: ${day.state === "shipped" ? "shipped ✓" : day.state === "not-shipped" ? "skipped" : "no entry"} (streak: ${day.streak})`}</title>
+                  <title>{`${day.date}: ${day.state === "shipped" ? "shipped" : day.state === "not-shipped" ? "skipped" : "no entry"} (streak: ${day.streak})`}</title>
                 </circle>
               </g>
             )
@@ -167,17 +160,17 @@ export default function GraphPage() {
       </div>
 
       {/* Legend */}
-      <div className="flex items-center justify-center gap-5 text-xs font-medium text-purple-700">
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-emerald-500 ring-2 ring-white"></div>
+      <div className="flex items-center justify-center gap-4 text-xs text-[#5B7785]">
+        <div className="flex items-center gap-1.5">
+          <div className="w-2.5 h-2.5 rounded-full bg-[#C29762]"></div>
           <span>shipped</span>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-purple-300 ring-2 ring-white"></div>
+        <div className="flex items-center gap-1.5">
+          <div className="w-2.5 h-2.5 rounded-full bg-[#5B7785]"></div>
           <span>skipped</span>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-purple-100 ring-2 ring-white"></div>
+        <div className="flex items-center gap-1.5">
+          <div className="w-2.5 h-2.5 rounded-full bg-[#ECE1E9] border border-[#5B7785]/20"></div>
           <span>no entry</span>
         </div>
       </div>

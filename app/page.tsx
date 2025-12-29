@@ -19,8 +19,8 @@ export default function Page() {
   }
 
   return (
-    <div className="w-full max-w-md mx-auto flex flex-col bg-gradient-to-br from-purple-50 via-white to-emerald-50 shadow-xl overflow-hidden min-h-screen">
-      <div className="px-6 py-10 flex-1">
+    <div className="w-full max-w-md mx-auto flex flex-col bg-white/90 shadow-lg overflow-hidden min-h-screen">
+      <div className="px-6 py-8 flex-1">
         {currentPage === "home" && <HomePage />}
         {currentPage === "graph" && <GraphPage />}
         {currentPage === "settings" && <SettingsPage />}

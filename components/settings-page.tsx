@@ -33,57 +33,56 @@ export default function SettingsPage() {
   if (!mounted) return null
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="text-center space-y-2">
-        <div className="text-4xl mb-2">⚙️</div>
-        <h2 className="text-2xl font-semibold text-purple-900">settings</h2>
-        <p className="text-sm text-purple-600">make it yours~</p>
+    <div className="flex flex-col gap-4">
+      <div className="text-center space-y-1">
+        <h2 className="text-lg font-medium text-[#2E6467]">settings</h2>
+        <p className="text-xs text-[#5B7785]">customize your experience</p>
       </div>
 
-      <div className="space-y-5">
+      <div className="space-y-4">
         <div>
-          <label className="block text-sm font-semibold text-purple-700 mb-2">your name</label>
+          <label className="block text-xs font-medium text-[#5B7785] mb-1.5">name</label>
           <input
             type="text"
             value={user.name}
             onChange={(e) => handleChange("name", e.target.value)}
             placeholder="your name"
-            className="w-full px-5 py-3 text-base bg-white/70 border-2 border-purple-200 rounded-2xl text-purple-900 placeholder-purple-300 focus:outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-100 transition-all"
+            className="w-full px-4 py-2.5 text-sm bg-[#ECE1E9]/30 border border-[#5B7785]/20 rounded-xl text-[#2E6467] placeholder-[#5B7785]/40 focus:outline-none focus:border-[#5B7785]/40 focus:ring-2 focus:ring-[#5B7785]/10 transition-all"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-purple-700 mb-2">
+          <label className="block text-xs font-medium text-[#5B7785] mb-1.5">
             day start time
           </label>
           <input
             type="time"
             value={user.dayStart}
             onChange={(e) => handleChange("dayStart", e.target.value)}
-            className="w-full px-5 py-3 text-base bg-white/70 border-2 border-purple-200 rounded-2xl text-purple-900 focus:outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-100 transition-all"
+            className="w-full px-4 py-2.5 text-sm bg-[#ECE1E9]/30 border border-[#5B7785]/20 rounded-xl text-[#2E6467] focus:outline-none focus:border-[#5B7785]/40 focus:ring-2 focus:ring-[#5B7785]/10 transition-all"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-semibold text-purple-700 mb-2">day end time</label>
+          <label className="block text-xs font-medium text-[#5B7785] mb-1.5">day end time</label>
           <input
             type="time"
             value={user.dayEnd}
             onChange={(e) => handleChange("dayEnd", e.target.value)}
-            className="w-full px-5 py-3 text-base bg-white/70 border-2 border-purple-200 rounded-2xl text-purple-900 focus:outline-none focus:border-purple-400 focus:ring-4 focus:ring-purple-100 transition-all"
+            className="w-full px-4 py-2.5 text-sm bg-[#ECE1E9]/30 border border-[#5B7785]/20 rounded-xl text-[#2E6467] focus:outline-none focus:border-[#5B7785]/40 focus:ring-2 focus:ring-[#5B7785]/10 transition-all"
           />
         </div>
       </div>
 
-      <div className="flex flex-col gap-3 mt-4">
+      <div className="flex flex-col gap-2 mt-2">
         <button
           onClick={handleResetAll}
-          className="w-full px-5 py-3 text-sm font-semibold text-purple-700 bg-purple-50 border-2 border-purple-200 rounded-2xl hover:bg-purple-100 active:scale-95 transition-all"
+          className="w-full px-4 py-2.5 text-xs font-medium text-[#5B7785] bg-[#5B7785]/5 border border-[#5B7785]/20 rounded-xl hover:bg-[#5B7785]/10 active:scale-[0.98] transition-all"
         >
-          reset all data 🗑️
+          reset all data
         </button>
 
-        <p className="text-xs text-purple-500 text-center font-medium">everything saves automatically ✨</p>
+        <p className="text-xs text-[#5B7785]/60 text-center">saves automatically</p>
       </div>
     </div>
   )
