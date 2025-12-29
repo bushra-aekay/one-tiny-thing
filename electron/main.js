@@ -9,7 +9,7 @@ let lastCheckDate = null
 
 const createWindow = () => {
   mainWindow = new BrowserWindow({
-    width: 420,
+    width: 440,
     height: 580,
     frame: false,
     transparent: true,
@@ -20,8 +20,9 @@ const createWindow = () => {
       enableRemoteModule: false,
       preload: path.join(__dirname, 'preload.js')
     },
-    icon: path.join(__dirname, "../public/icon.svg"),
+    icon: path.join(__dirname, "../public/icon.png"),
     backgroundColor: '#00000000',
+    title: '🌱 one tiny thing',
   })
 
   const startUrl = isDev ? "http://localhost:3000" : `file://${path.join(__dirname, "../out/index.html")}`
